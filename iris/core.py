@@ -1,6 +1,7 @@
 import shlex
 import random
 import dill
+from .shell import IrisShell
 
 class IrisValue:
 
@@ -50,11 +51,9 @@ class Iris:
             result = func(*args, **kwargs)
             if isinstance(result, IrisValue):
                 self.env[result.name] = result.value
-                return result.value
             else:
                 self.env["results"].append(result)
-                return result
-            inner.iris = self
+            return result
         return inner
 
     def execute(self, query_string):
@@ -66,7 +65,6 @@ class Iris:
                 return True, to_execute["function"](*args)
         return False, None
 
-
     def register(self, command_string):
         def inner(func):
             # sketchy hack to get function arg names CPython
@@ -74,3 +72,20 @@ class Iris:
             self.mappings[command_string] = {"function":self.ctx_wrap(func), "args":f_args}
             return self.ctx_wrap(func)
         return inner
+
+    def env_loop(self):
+        def main_loop(x):
+            try:
+                succ, r = self.execute(x)
+                if succ:
+                    if isinstance(r, IrisValue):
+                        print("\t{}".format(r.value))
+                        print("\t(stored in {})".format(r.name))
+                    else:
+                        print("\t{}".format(r))
+                else:
+                    print("\tDid not match any existing command")
+            except Exception as e:
+                print("\tSomething went wrong: {}".format(e))
+        shell = IrisShell(main_loop)
+        shell.cmdloop()
