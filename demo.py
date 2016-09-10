@@ -28,13 +28,6 @@ def count1(lst):
         counts[x] += 1
     return counts
 
-@iris.register("count {lst1:List} {lst2:List}")
-def count2(lst1, lst2):
-    out = []
-    for l in [lst1, lst2]:
-        out.append(count1(l))
-    return out
-
 @iris.register("make indicator for {lst:List}")
 def make_indicator(lst):
     keys = set(lst)
@@ -79,5 +72,6 @@ for i,line in enumerate(fileinput.input()):
 for k,vs in data_cols.items():
     iris.env[k] = vs
 
+iris.train_model()
 
 iris.env_loop()

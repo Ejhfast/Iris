@@ -2,6 +2,10 @@ import shlex
 import random
 import dill
 from .shell import IrisShell
+from sklearn.linear_model import LogisticRegression
+from sklearn.feature_extraction.text import CountVectorizer
+from collections import defaultdict
+import numpy as np
 
 class IrisValue:
 
@@ -13,7 +17,20 @@ class Iris:
 
     def __init__(self):
         self.mappings = {}
+        self.cmd2class = {}
+        self.class2cmd = defaultdict(list)
+        self.class_functions = {}
+        self.model = LogisticRegression()
+        self.vectorizer = CountVectorizer()
         self.env = {"results":[]}
+
+    def train_model(self):
+        x_docs, y = zip(*[(k, v) for k,v in self.cmd2class.items()])
+        x = self.vectorizer.fit_transform(x_docs)
+        self.model.fit(x,y)
+
+    def predict_input(self, query):
+        return self.model.predict_log_proba(self.vectorizer.transform([query]))
 
     # placeholder for something that needs to convert string input into a python value
     def magic_type_convert(self, x, type_=None):
@@ -31,6 +48,16 @@ class Iris:
     def is_arg(self, s):
         if len(s)>2 and s[0] == "{" and s[-1] == "}": return True
         return False
+
+    def get_user_args(self, cmd):
+        maps = {}
+        for w in shlex.split(cmd):
+            if self.is_arg(w):
+                word_, type_ = w[1:-1].split(":")
+                print("\tWhat is {} in the command: \"{}\"".format(w,cmd))
+                data = input()
+                maps[word_] = self.magic_type_convert(data.strip(),type_)
+        return maps
 
     # attempt to match query string to command and return mappings
     def arg_match(self, query_string, command_string):
@@ -57,12 +84,25 @@ class Iris:
         return inner
 
     def execute(self, query_string):
-        for cmd in self.mappings.keys():
+        predictions = self.predict_input(query_string)[0].tolist()
+        sorted_predictions = sorted([(i,self.class2cmd[i],x) for i,x in enumerate(predictions)],key=lambda x: x[-1], reverse=True)
+        best_class = sorted_predictions[0][0]
+        to_execute = self.class_functions[best_class]
+        for cmd in self.class2cmd[best_class]:
             succ, map = self.arg_match(query_string, cmd)
             if succ:
-                to_execute = self.mappings[cmd]
                 args = [map[arg_name] for arg_name in to_execute["args"]]
                 return True, to_execute["function"](*args)
+        args_map = self.get_user_args(cmd)
+        if args_map:
+            args = [args_map[arg_name] for arg_name in to_execute["args"]]
+            return True, to_execute["function"](*args)
+        # for cmd in self.mappings.keys():
+        #     succ, map = self.arg_match(query_string, cmd)
+        #     if succ:
+        #         to_execute = self.mappings[cmd]
+        #         args = [map[arg_name] for arg_name in to_execute["args"]]
+        #         return True, to_execute["function"](*args)
         return False, None
 
     def register(self, command_string):
@@ -70,6 +110,10 @@ class Iris:
             # sketchy hack to get function arg names CPython
             f_args = func.__code__.co_varnames[:func.__code__.co_argcount]
             self.mappings[command_string] = {"function":self.ctx_wrap(func), "args":f_args}
+            new_index = len(self.cmd2class)
+            self.cmd2class[command_string] = new_index
+            self.class2cmd[new_index].append(command_string)
+            self.class_functions[new_index] = {"function":self.ctx_wrap(func), "args":f_args}
             return self.ctx_wrap(func)
         return inner
 
