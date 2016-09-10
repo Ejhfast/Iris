@@ -35,13 +35,33 @@ def count2(lst1, lst2):
         out.append(count1(l))
     return out
 
+@iris.register("make indicator for {lst:List}")
+def make_indicator(lst):
+    keys = set(lst)
+    index2key = {i:k for i,k in enumerate(keys)}
+    key2index = {k:i for i,k in index2key.items()}
+    return [key2index[x] for x in lst]
+
 @iris.register("what vars")
 def what_vars():
     return iris.env.keys()
 
+@iris.register("last values")
+def last_values():
+    return iris.env["results"]
+
+@iris.register("env")
+def env():
+    return iris.env
+
 @iris.register("{x:List}")
 def info(x):
     return x
+
+@iris.register("list commands")
+def list_cmds():
+    for k in iris.mappings.keys():
+        print(k)
 
 iris.env["my_list"] = [1,2,3,4,5]
 iris.env["my_num"] = 3
