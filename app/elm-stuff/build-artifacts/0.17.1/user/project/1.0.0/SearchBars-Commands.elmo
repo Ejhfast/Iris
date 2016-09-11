@@ -1,0 +1,23 @@
+var _user$project$SearchBars_Commands$memberDecoder = A4(
+	_elm_lang$core$Json_Decode$object3,
+	_user$project$SearchBars_Models$Classification,
+	A2(
+		_elm_lang$core$Json_Decode_ops[':='],
+		'cmds',
+		_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string)),
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'prob', _elm_lang$core$Json_Decode$float),
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'class', _elm_lang$core$Json_Decode$int));
+var _user$project$SearchBars_Commands$collectionDecoder = _elm_lang$core$Json_Decode$list(_user$project$SearchBars_Commands$memberDecoder);
+var _user$project$SearchBars_Commands$classify_url = 'http://localhost:8000/classify';
+var _user$project$SearchBars_Commands$post_classify = function (data) {
+	var query_data = _evancz$elm_http$Http$multipart(
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(_evancz$elm_http$Http$stringData, 'query', data)
+			]));
+	return A3(
+		_elm_lang$core$Task$perform,
+		_user$project$SearchBars_Messages$ClassifyFail,
+		_user$project$SearchBars_Messages$ClassifySucc,
+		A3(_evancz$elm_http$Http$post, _user$project$SearchBars_Commands$collectionDecoder, _user$project$SearchBars_Commands$classify_url, query_data));
+};

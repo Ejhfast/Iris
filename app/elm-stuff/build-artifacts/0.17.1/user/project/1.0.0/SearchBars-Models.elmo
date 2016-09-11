@@ -1,0 +1,12 @@
+var _user$project$SearchBars_Models$Label = F3(
+	function (a, b, c) {
+		return {text: a, index: b, label: c};
+	});
+var _user$project$SearchBars_Models$Classification = F3(
+	function (a, b, c) {
+		return {cmds: a, prob: b, id: c};
+	});
+var _user$project$SearchBars_Models$SearchBar = F3(
+	function (a, b, c) {
+		return {query: a, classification: b, labels: c};
+	});

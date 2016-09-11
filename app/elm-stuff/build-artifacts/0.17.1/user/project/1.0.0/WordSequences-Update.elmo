@@ -1,0 +1,28 @@
+var _user$project$WordSequences_Update$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		if (_p0.ctor === 'ChangeInput') {
+			var words = A2(_elm_lang$core$String$split, ' ', _p0._0);
+			var labels = A2(
+				_elm_lang$core$List$map,
+				function (x) {
+					return {ctor: '_Tuple2', _0: x, _1: 0};
+				},
+				words);
+			return {
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Native_Utils.update(
+					model,
+					{word_labels: labels}),
+				_1: _elm_lang$core$Platform_Cmd$none
+			};
+		} else {
+			return {
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Native_Utils.update(
+					model,
+					{word_labels: _p0._0}),
+				_1: _elm_lang$core$Platform_Cmd$none
+			};
+		}
+	});

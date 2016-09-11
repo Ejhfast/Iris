@@ -1,0 +1,12 @@
+var _user$project$Models$initialModel = {
+	search: {
+		query: 'search',
+		classification: _elm_lang$core$Native_List.fromArray(
+			[]),
+		labels: _elm_lang$core$Native_List.fromArray(
+			[])
+	}
+};
+var _user$project$Models$Model = function (a) {
+	return {search: a};
+};

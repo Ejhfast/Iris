@@ -1,0 +1,6 @@
+var _user$project$WordSequences_Messages$UpdateLabels = function (a) {
+	return {ctor: 'UpdateLabels', _0: a};
+};
+var _user$project$WordSequences_Messages$ChangeInput = function (a) {
+	return {ctor: 'ChangeInput', _0: a};
+};

@@ -1,0 +1,23 @@
+var _user$project$View$page = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_elm_lang$html$Html_App$map,
+				_user$project$Messages$SearchMsg,
+				_user$project$SearchBars_View$view(model.search))
+			]));
+};
+var _user$project$View$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_user$project$View$page(model)
+			]));
+};

@@ -32,6 +32,17 @@ class Iris:
     def predict_input(self, query):
         return self.model.predict_log_proba(self.vectorizer.transform([query]))
 
+    def best_n(self, query, n=1):
+        probs = self.model.predict_log_proba(self.vectorizer.transform([query]))[0]
+        results = []
+        for i,p in sorted(enumerate(probs),key=lambda x: x[1],reverse=True):
+            results.append({
+                "class":i,
+                "prob":p,
+                "cmds": self.class2cmd[i],
+            })
+        return results[:n]
+
     # placeholder for something that needs to convert string input into a python value
     def magic_type_convert(self, x, type_=None):
         if x in self.env:

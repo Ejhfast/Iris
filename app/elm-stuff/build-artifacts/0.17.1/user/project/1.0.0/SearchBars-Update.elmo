@@ -1,0 +1,95 @@
+var _user$project$SearchBars_Update$make_labels = function (s) {
+	var words = A2(_elm_lang$core$String$split, ' ', s);
+	return A2(
+		_elm_lang$core$List$indexedMap,
+		F2(
+			function (i, x) {
+				return {index: i, text: x, label: 0};
+			}),
+		words);
+};
+var _user$project$SearchBars_Update$flip_if_match = F2(
+	function (idx, clabel) {
+		var _p0 = {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Native_Utils.eq(clabel.index, idx),
+			_1: clabel.label
+		};
+		_v0_2:
+		do {
+			if (_p0._0 === true) {
+				switch (_p0._1) {
+					case 1:
+						return _elm_lang$core$Native_Utils.update(
+							clabel,
+							{label: 0});
+					case 0:
+						return _elm_lang$core$Native_Utils.update(
+							clabel,
+							{label: 1});
+					default:
+						break _v0_2;
+				}
+			} else {
+				break _v0_2;
+			}
+		} while(false);
+		return clabel;
+	});
+var _user$project$SearchBars_Update$update = F2(
+	function (msg, model) {
+		var _p1 = msg;
+		switch (_p1.ctor) {
+			case 'ChangeInput':
+				var _p2 = _p1._0;
+				var labels = _user$project$SearchBars_Update$make_labels(_p2);
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							query: _p2,
+							labels: labels,
+							classification: _elm_lang$core$Native_List.fromArray(
+								[])
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'LabelToggle':
+				var match_w = _user$project$SearchBars_Update$flip_if_match(_p1._0);
+				var new_labels = A2(_elm_lang$core$List$map, match_w, model.labels);
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{labels: new_labels}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'Submit':
+				return {
+					ctor: '_Tuple2',
+					_0: model,
+					_1: _user$project$SearchBars_Commands$post_classify(model.query)
+				};
+			case 'ClassifyFail':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			default:
+				var x = _elm_lang$core$Debug$log('succ');
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{classification: _p1._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+		}
+	});
+var _user$project$SearchBars_Update$classify = _elm_lang$core$Native_List.fromArray(
+	[
+		{
+		id: -1,
+		cmds: _elm_lang$core$Native_List.fromArray(
+			[]),
+		prob: 0
+	}
+	]);

@@ -59,19 +59,19 @@ def list_cmds():
 iris.env["my_list"] = [1,2,3,4,5]
 iris.env["my_num"] = 3
 
-data_cols = defaultdict(list)
-lookup = {}
-for i,line in enumerate(fileinput.input()):
-    if i == 0:
-        for j,col in enumerate(line.strip().split(",")):
-            lookup[j] = col
-    else:
-        for j,d in enumerate(line.strip().split(",")):
-            data_cols[lookup[j]].append(d)
-
-for k,vs in data_cols.items():
-    iris.env[k] = vs
+# data_cols = defaultdict(list)
+# lookup = {}
+# for i,line in enumerate(fileinput.input()):
+#     if i == 0:
+#         for j,col in enumerate(line.strip().split(",")):
+#             lookup[j] = col
+#     else:
+#         for j,d in enumerate(line.strip().split(",")):
+#             data_cols[lookup[j]].append(d)
+#
+# for k,vs in data_cols.items():
+#     iris.env[k] = vs
 
 iris.train_model()
 
-iris.env_loop()
+# iris.env_loop()

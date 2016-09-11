@@ -1,0 +1,3 @@
+var _user$project$WordSequences_Models$WordSequence = function (a) {
+	return {word_labels: a};
+};
