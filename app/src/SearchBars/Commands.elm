@@ -21,13 +21,16 @@ collectionDecoder : Decode.Decoder (List Classification)
 collectionDecoder =
     Decode.list memberDecoder
 
+label_decoder = Decode.object3 Label ("text" := Decode.string) ("index" := Decode.int) ("label" := Decode.int)
+
 memberDecoder : Decode.Decoder Classification
 memberDecoder =
-    Decode.object4 Classification
+    Decode.object5 Classification
         ("cmds" := Decode.list Decode.string)
         ("prob" := Decode.float)
         ("class" := Decode.int)
         ("args" := Decode.int)
+        ("labels" := Decode.list label_decoder)
 
 -- execution
 

@@ -44,7 +44,7 @@ update msg model =
         ClassifyFail error ->
             (model, Cmd.none)
         ClassifySucc results ->
-            ({model | classification = Just results}, Cmd.none)
+            ({model | classification = Just results, labels = results.labels}, Cmd.none)
         ExecuteFail error ->
             (model, Cmd.none)
         ExecuteSucc str ->

@@ -7,6 +7,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from collections import defaultdict
 import numpy as np
 
+
 class IrisValue:
 
     def __init__(self, value, name=None):
@@ -32,15 +33,33 @@ class Iris:
     def predict_input(self, query):
         return self.model.predict_log_proba(self.vectorizer.transform([query]))
 
+    def make_labels(self,query,cmd,succ):
+        label = 0
+        labels = []
+        cw_words = cmd.split()
+        for i,w in enumerate(query.split()):
+            if i < len(cw_words) and self.is_arg(cw_words[i]) and succ:
+                label += 1
+                labels.append({"text":w,"index":i,"label":label})
+            else:
+                labels.append({"text":w,"index":i,"label":0})
+        return labels
+
     def best_n(self, query, n=1):
         probs = self.model.predict_log_proba(self.vectorizer.transform([query]))[0]
         results = []
         for i,p in sorted(enumerate(probs),key=lambda x: x[1],reverse=True):
+            for cmd in self.class2cmd[i]:
+                succ, map = self.arg_match(query, cmd)
+                if succ: break
+            print(query,cmd,succ)
+            labels = self.make_labels(query,cmd,succ)
             results.append({
                 "class":i,
                 "prob":p,
                 "cmds": self.class2cmd[i],
-                "args": len(self.class_functions[i]["args"])
+                "args": len(self.class_functions[i]["args"]),
+                "labels": labels
             })
         return results[0] # just returning one for now
 
@@ -89,6 +108,7 @@ class Iris:
     # attempt to match query string to command and return mappings
     def arg_match(self, query_string, command_string):
         maps = {}
+        labels = []
         query_words, cmd_words = [shlex.split(x) for x in [query_string, command_string]]
         if len(query_words) != len(cmd_words): return False, {}
         for qw, cw in zip(query_words, cmd_words):

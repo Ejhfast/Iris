@@ -2,9 +2,9 @@ var _user$project$SearchBars_Models$Label = F3(
 	function (a, b, c) {
 		return {text: a, index: b, label: c};
 	});
-var _user$project$SearchBars_Models$Classification = F4(
-	function (a, b, c, d) {
-		return {cmds: a, prob: b, id: c, args: d};
+var _user$project$SearchBars_Models$Classification = F5(
+	function (a, b, c, d, e) {
+		return {cmds: a, prob: b, id: c, args: d, labels: e};
 	});
 var _user$project$SearchBars_Models$SearchBar = F4(
 	function (a, b, c, d) {

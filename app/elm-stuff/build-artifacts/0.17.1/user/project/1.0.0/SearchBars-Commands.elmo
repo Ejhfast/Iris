@@ -51,8 +51,14 @@ var _user$project$SearchBars_Commands$post_execute = function (model) {
 		_user$project$SearchBars_Messages$ExecuteSucc,
 		A3(_evancz$elm_http$Http$post, _user$project$SearchBars_Commands$execute_decoder, _user$project$SearchBars_Commands$execute_url, ex_data));
 };
-var _user$project$SearchBars_Commands$memberDecoder = A5(
-	_elm_lang$core$Json_Decode$object4,
+var _user$project$SearchBars_Commands$label_decoder = A4(
+	_elm_lang$core$Json_Decode$object3,
+	_user$project$SearchBars_Models$Label,
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'text', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'index', _elm_lang$core$Json_Decode$int),
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'label', _elm_lang$core$Json_Decode$int));
+var _user$project$SearchBars_Commands$memberDecoder = A6(
+	_elm_lang$core$Json_Decode$object5,
 	_user$project$SearchBars_Models$Classification,
 	A2(
 		_elm_lang$core$Json_Decode_ops[':='],
@@ -60,7 +66,11 @@ var _user$project$SearchBars_Commands$memberDecoder = A5(
 		_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string)),
 	A2(_elm_lang$core$Json_Decode_ops[':='], 'prob', _elm_lang$core$Json_Decode$float),
 	A2(_elm_lang$core$Json_Decode_ops[':='], 'class', _elm_lang$core$Json_Decode$int),
-	A2(_elm_lang$core$Json_Decode_ops[':='], 'args', _elm_lang$core$Json_Decode$int));
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'args', _elm_lang$core$Json_Decode$int),
+	A2(
+		_elm_lang$core$Json_Decode_ops[':='],
+		'labels',
+		_elm_lang$core$Json_Decode$list(_user$project$SearchBars_Commands$label_decoder)));
 var _user$project$SearchBars_Commands$collectionDecoder = _elm_lang$core$Json_Decode$list(_user$project$SearchBars_Commands$memberDecoder);
 var _user$project$SearchBars_Commands$classify_url = 'http://localhost:8000/classify';
 var _user$project$SearchBars_Commands$post_classify = function (data) {
