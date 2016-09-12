@@ -1,6 +1,6 @@
 module SearchBars.View exposing (..)
 
-import Html exposing (Html, div, text, input, a, span, h4)
+import Html exposing (Html, div, text, input, a, span, h4, button)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick)
 import SearchBars.Messages exposing (Msg(..))
@@ -8,8 +8,8 @@ import SearchBars.Models exposing (SearchBar, Label, Classification)
 
 -- VIEW
 
-button : String -> Msg -> Html Msg
-button str m = a [ class "btn", onClick m ] [text str]
+button' : String -> Msg -> Html Msg
+button' str m = button [ class "button", onClick m ] [text str]
 
 word_span : Label -> Html Msg
 word_span label = span [class ("label-word color-"++(toString label.label)), onClick (LabelToggle label.index)] [(text label.text)]
@@ -31,14 +31,25 @@ if_classified model =
         list_commands c.cmds,
         h4 [] [(text "Select arguments:")],
         -- div [class "classification"] [text "Classification:", text (toString c)],
-        div [class "seq_box"] (List.map word_span model.labels)
+        div [class "seq_box"] (List.map word_span model.labels),
+        div [class "execute"] [button' "Run" Execute]
       ]
+
+if_run : SearchBar -> Html Msg
+if_run model =
+  case model.output of
+    Just out ->
+      div [class "content"] [
+        div [class "out_box"] [(text out)]
+      ]
+    Nothing -> div [] []
 
 view : SearchBar -> Html Msg
 view model =
     div []
-        [ div [class "input_box"] [input_field, button "Execute" Submit],
-          if_classified model
+        [ div [class "input_box"] [input_field, button' "Execute" Submit],
+          if_classified model,
+          if_run model
         ]
           -- div [class "query_box"] [text model.query],
           -- ,

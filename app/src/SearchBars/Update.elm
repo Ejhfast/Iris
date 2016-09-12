@@ -32,7 +32,7 @@ update msg model =
     case msg of
         ChangeInput input ->
             let labels = make_labels input in
-            ({ model | query = input, labels = labels, classification = Nothing }, Cmd.none)
+            ({ model | query = input, labels = labels, classification = Nothing, output = Nothing }, Cmd.none)
         LabelToggle w ->
             let match_w = flip_if_match w model.classification
                 new_labels = List.map match_w model.labels in

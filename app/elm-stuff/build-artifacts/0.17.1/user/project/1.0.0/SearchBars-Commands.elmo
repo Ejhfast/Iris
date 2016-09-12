@@ -1,10 +1,34 @@
-var _user$project$SearchBars_Commands$execute_decoder = A2(_elm_lang$core$Json_Decode_ops[':='], 'exe', _elm_lang$core$Json_Decode$string);
+var _user$project$SearchBars_Commands$execute_decoder = A2(_elm_lang$core$Json_Decode_ops[':='], 'result', _elm_lang$core$Json_Decode$string);
+var _user$project$SearchBars_Commands$label_to_value = function (_p0) {
+	var _p1 = _p0;
+	return _elm_lang$core$Json_Encode$object(
+		_elm_lang$core$Native_List.fromArray(
+			[
+				{
+				ctor: '_Tuple2',
+				_0: 'text',
+				_1: _elm_lang$core$Json_Encode$string(_p1.text)
+			},
+				{
+				ctor: '_Tuple2',
+				_0: 'index',
+				_1: _elm_lang$core$Json_Encode$int(_p1.index)
+			},
+				{
+				ctor: '_Tuple2',
+				_0: 'label',
+				_1: _elm_lang$core$Json_Encode$int(_p1.label)
+			}
+			]));
+};
 var _user$project$SearchBars_Commands$execute_url = 'http://localhost:8000/execute';
 var _user$project$SearchBars_Commands$post_execute = function (model) {
+	var label_encode = _elm_lang$core$Json_Encode$list(
+		A2(_elm_lang$core$List$map, _user$project$SearchBars_Commands$label_to_value, model.labels));
 	var model_class = function () {
-		var _p0 = model.classification;
-		if (_p0.ctor === 'Just') {
-			return _p0._0.id;
+		var _p2 = model.classification;
+		if (_p2.ctor === 'Just') {
+			return _p2._0.id;
 		} else {
 			return -1;
 		}
@@ -19,10 +43,7 @@ var _user$project$SearchBars_Commands$post_execute = function (model) {
 				A2(
 				_evancz$elm_http$Http$stringData,
 				'args',
-				A2(
-					_elm_lang$core$Json_Encode$encode,
-					0,
-					_elm_lang$core$Json_Encode$object(model.labels)))
+				A2(_elm_lang$core$Json_Encode$encode, 0, label_encode))
 			]));
 	return A3(
 		_elm_lang$core$Task$perform,

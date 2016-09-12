@@ -44,6 +44,21 @@ class Iris:
             })
         return results[0] # just returning one for now
 
+    def call_class(self, class_, args):
+        to_execute = self.class_functions[class_]
+        num_args = max([x["label"] for x in args])
+        extracted_args = []
+        cmd_words = [x for x in self.class2cmd[class_][0].split() if self.is_arg(x)]
+        for i,ref in zip(range(1,num_args+1),cmd_words):
+            ref_type =  ref[1:-1].split(":")[1].strip()
+            argi = " ".join([x["text"] for x in args if x["label"] == i])
+            argt = self.magic_type_convert(argi,ref_type)
+            extracted_args.append(argt)
+        print(extracted_args)
+        res =  to_execute["function"](*extracted_args)
+        print(res)
+        return res
+
     # placeholder for something that needs to convert string input into a python value
     def magic_type_convert(self, x, type_=None):
         if x in self.env:

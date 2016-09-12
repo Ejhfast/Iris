@@ -28,8 +28,11 @@ add_cors(app.router.add_route('POST', '/classify', classify_query))
 
 async def execute_function(request):
     data = await request.post()
-    execution = {}
-    return web.json_response(execution)
+    ex_class = data["class"]
+    args = json.loads(data["args"])
+    print(ex_class,args)
+    execution = iris.call_class(int(ex_class), args)
+    return web.json_response({"result": str(execution)})
 
 add_cors(app.router.add_route('POST', '/execute', execute_function))
 

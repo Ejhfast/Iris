@@ -1,5 +1,5 @@
 module SearchBars.Commands exposing (..)
-import SearchBars.Models exposing (Classification)
+import SearchBars.Models exposing (Classification, Label)
 import SearchBars.Messages exposing (Msg(..))
 import Http
 import Json.Decode as Decode exposing ((:=))
@@ -33,14 +33,18 @@ memberDecoder =
 
 execute_url = "http://localhost:8000/execute"
 
+label_to_value : Label -> JS.Value
+label_to_value {text,index,label} =
+    JS.object [("text", JS.string text), ("index", JS.int index), ("label", JS.int label)]
+
 post_execute model =
   let model_class = (case model.classification of
         Just c -> c.id
         Nothing -> -1)
-      label_encode = JS.list (List.map (JS.encode 0) model.labels)
+      label_encode = JS.list (List.map label_to_value model.labels)
       ex_data = Http.multipart [ Http.stringData "class" (toString model_class),
                                  Http.stringData "args" (JS.encode 0 label_encode)] in
       Http.post execute_decoder execute_url ex_data
         |> Task.perform ExecuteFail ExecuteSucc
 
-execute_decoder = ("exe" := Decode.string)
+execute_decoder = ("result" := Decode.string)

@@ -1,3 +1,34 @@
+var _user$project$SearchBars_View$if_run = function (model) {
+	var _p0 = model.output;
+	if (_p0.ctor === 'Just') {
+		return A2(
+			_elm_lang$html$Html$div,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html_Attributes$class('content')
+				]),
+			_elm_lang$core$Native_List.fromArray(
+				[
+					A2(
+					_elm_lang$html$Html$div,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$class('out_box')
+						]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text(_p0._0)
+						]))
+				]));
+	} else {
+		return A2(
+			_elm_lang$html$Html$div,
+			_elm_lang$core$Native_List.fromArray(
+				[]),
+			_elm_lang$core$Native_List.fromArray(
+				[]));
+	}
+};
 var _user$project$SearchBars_View$list_commands = function (c) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -45,9 +76,23 @@ var _user$project$SearchBars_View$word_span = function (label) {
 				_elm_lang$html$Html$text(label.text)
 			]));
 };
+var _user$project$SearchBars_View$button$ = F2(
+	function (str, m) {
+		return A2(
+			_elm_lang$html$Html$button,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html_Attributes$class('button'),
+					_elm_lang$html$Html_Events$onClick(m)
+				]),
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html$text(str)
+				]));
+	});
 var _user$project$SearchBars_View$if_classified = function (model) {
-	var _p0 = model.classification;
-	if (_p0.ctor === 'Nothing') {
+	var _p1 = model.classification;
+	if (_p1.ctor === 'Nothing') {
 		return A2(
 			_elm_lang$html$Html$div,
 			_elm_lang$core$Native_List.fromArray(
@@ -71,7 +116,7 @@ var _user$project$SearchBars_View$if_classified = function (model) {
 						[
 							_elm_lang$html$Html$text('Cmd:')
 						])),
-					_user$project$SearchBars_View$list_commands(_p0._0.cmds),
+					_user$project$SearchBars_View$list_commands(_p1._0.cmds),
 					A2(
 					_elm_lang$html$Html$h4,
 					_elm_lang$core$Native_List.fromArray(
@@ -86,24 +131,20 @@ var _user$project$SearchBars_View$if_classified = function (model) {
 						[
 							_elm_lang$html$Html_Attributes$class('seq_box')
 						]),
-					A2(_elm_lang$core$List$map, _user$project$SearchBars_View$word_span, model.labels))
+					A2(_elm_lang$core$List$map, _user$project$SearchBars_View$word_span, model.labels)),
+					A2(
+					_elm_lang$html$Html$div,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$class('execute')
+						]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							A2(_user$project$SearchBars_View$button$, 'Run', _user$project$SearchBars_Messages$Execute)
+						]))
 				]));
 	}
 };
-var _user$project$SearchBars_View$button = F2(
-	function (str, m) {
-		return A2(
-			_elm_lang$html$Html$a,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html_Attributes$class('btn'),
-					_elm_lang$html$Html_Events$onClick(m)
-				]),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html$text(str)
-				]));
-	});
 var _user$project$SearchBars_View$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -120,8 +161,9 @@ var _user$project$SearchBars_View$view = function (model) {
 				_elm_lang$core$Native_List.fromArray(
 					[
 						_user$project$SearchBars_View$input_field,
-						A2(_user$project$SearchBars_View$button, 'Execute', _user$project$SearchBars_Messages$Submit)
+						A2(_user$project$SearchBars_View$button$, 'Execute', _user$project$SearchBars_Messages$Submit)
 					])),
-				_user$project$SearchBars_View$if_classified(model)
+				_user$project$SearchBars_View$if_classified(model),
+				_user$project$SearchBars_View$if_run(model)
 			]));
 };

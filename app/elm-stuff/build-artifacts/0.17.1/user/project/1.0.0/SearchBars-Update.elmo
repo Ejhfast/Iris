@@ -44,7 +44,7 @@ var _user$project$SearchBars_Update$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{query: _p3, labels: labels, classification: _elm_lang$core$Maybe$Nothing}),
+						{query: _p3, labels: labels, classification: _elm_lang$core$Maybe$Nothing, output: _elm_lang$core$Maybe$Nothing}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'LabelToggle':
@@ -62,6 +62,12 @@ var _user$project$SearchBars_Update$update = F2(
 					ctor: '_Tuple2',
 					_0: model,
 					_1: _user$project$SearchBars_Commands$post_classify(model.query)
+				};
+			case 'Execute':
+				return {
+					ctor: '_Tuple2',
+					_0: model,
+					_1: _user$project$SearchBars_Commands$post_execute(model)
 				};
 			case 'ClassifyFail':
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
