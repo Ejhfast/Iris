@@ -23,7 +23,7 @@ list_commands c =
 
 if_classified : SearchBar -> Html Msg
 if_classified model =
-  case List.head model.classification of
+  case model.classification of
     Nothing -> div [] []
     Just c ->
       div [class "content"] [

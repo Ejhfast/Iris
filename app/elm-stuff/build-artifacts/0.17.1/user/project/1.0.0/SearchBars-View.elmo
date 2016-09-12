@@ -46,7 +46,7 @@ var _user$project$SearchBars_View$word_span = function (label) {
 			]));
 };
 var _user$project$SearchBars_View$if_classified = function (model) {
-	var _p0 = _elm_lang$core$List$head(model.classification);
+	var _p0 = model.classification;
 	if (_p0.ctor === 'Nothing') {
 		return A2(
 			_elm_lang$html$Html$div,

@@ -1,12 +1,45 @@
-var _user$project$SearchBars_Commands$memberDecoder = A4(
-	_elm_lang$core$Json_Decode$object3,
+var _user$project$SearchBars_Commands$execute_decoder = A2(_elm_lang$core$Json_Decode_ops[':='], 'exe', _elm_lang$core$Json_Decode$string);
+var _user$project$SearchBars_Commands$execute_url = 'http://localhost:8000/execute';
+var _user$project$SearchBars_Commands$post_execute = function (model) {
+	var model_class = function () {
+		var _p0 = model.classification;
+		if (_p0.ctor === 'Just') {
+			return _p0._0.id;
+		} else {
+			return -1;
+		}
+	}();
+	var ex_data = _evancz$elm_http$Http$multipart(
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_evancz$elm_http$Http$stringData,
+				'class',
+				_elm_lang$core$Basics$toString(model_class)),
+				A2(
+				_evancz$elm_http$Http$stringData,
+				'args',
+				A2(
+					_elm_lang$core$Json_Encode$encode,
+					0,
+					_elm_lang$core$Json_Encode$object(model.labels)))
+			]));
+	return A3(
+		_elm_lang$core$Task$perform,
+		_user$project$SearchBars_Messages$ExecuteFail,
+		_user$project$SearchBars_Messages$ExecuteSucc,
+		A3(_evancz$elm_http$Http$post, _user$project$SearchBars_Commands$execute_decoder, _user$project$SearchBars_Commands$execute_url, ex_data));
+};
+var _user$project$SearchBars_Commands$memberDecoder = A5(
+	_elm_lang$core$Json_Decode$object4,
 	_user$project$SearchBars_Models$Classification,
 	A2(
 		_elm_lang$core$Json_Decode_ops[':='],
 		'cmds',
 		_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string)),
 	A2(_elm_lang$core$Json_Decode_ops[':='], 'prob', _elm_lang$core$Json_Decode$float),
-	A2(_elm_lang$core$Json_Decode_ops[':='], 'class', _elm_lang$core$Json_Decode$int));
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'class', _elm_lang$core$Json_Decode$int),
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'args', _elm_lang$core$Json_Decode$int));
 var _user$project$SearchBars_Commands$collectionDecoder = _elm_lang$core$Json_Decode$list(_user$project$SearchBars_Commands$memberDecoder);
 var _user$project$SearchBars_Commands$classify_url = 'http://localhost:8000/classify';
 var _user$project$SearchBars_Commands$post_classify = function (data) {
@@ -19,5 +52,5 @@ var _user$project$SearchBars_Commands$post_classify = function (data) {
 		_elm_lang$core$Task$perform,
 		_user$project$SearchBars_Messages$ClassifyFail,
 		_user$project$SearchBars_Messages$ClassifySucc,
-		A3(_evancz$elm_http$Http$post, _user$project$SearchBars_Commands$collectionDecoder, _user$project$SearchBars_Commands$classify_url, query_data));
+		A3(_evancz$elm_http$Http$post, _user$project$SearchBars_Commands$memberDecoder, _user$project$SearchBars_Commands$classify_url, query_data));
 };

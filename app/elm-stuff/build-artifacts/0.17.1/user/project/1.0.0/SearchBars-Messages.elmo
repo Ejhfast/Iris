@@ -1,3 +1,9 @@
+var _user$project$SearchBars_Messages$ExecuteSucc = function (a) {
+	return {ctor: 'ExecuteSucc', _0: a};
+};
+var _user$project$SearchBars_Messages$ExecuteFail = function (a) {
+	return {ctor: 'ExecuteFail', _0: a};
+};
 var _user$project$SearchBars_Messages$ClassifySucc = function (a) {
 	return {ctor: 'ClassifySucc', _0: a};
 };
@@ -7,6 +13,7 @@ var _user$project$SearchBars_Messages$ClassifyFail = function (a) {
 var _user$project$SearchBars_Messages$LabelToggle = function (a) {
 	return {ctor: 'LabelToggle', _0: a};
 };
+var _user$project$SearchBars_Messages$Execute = {ctor: 'Execute'};
 var _user$project$SearchBars_Messages$Submit = {ctor: 'Submit'};
 var _user$project$SearchBars_Messages$ChangeInput = function (a) {
 	return {ctor: 'ChangeInput', _0: a};

@@ -7,6 +7,9 @@ import Http
 type Msg
     = ChangeInput String
     | Submit
+    | Execute
     | LabelToggle Int
     | ClassifyFail (Http.Error)
-    | ClassifySucc (List Classification)
+    | ClassifySucc (Classification)
+    | ExecuteFail (Http.Error)
+    | ExecuteSucc (String)

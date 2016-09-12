@@ -4,7 +4,10 @@ module SearchBars.Models exposing (..)
 
 type alias Label = {text : String, index : Int, label : Int}
 
-type alias Classification = {cmds : List String, prob : Float, id : Int}
+type alias Classification = {cmds : List String, prob : Float, id : Int, args : Int}
 
 type alias SearchBar =
-    { query : String, classification : List Classification, labels : List Label}
+    { query : String,
+      classification : Maybe Classification,
+      labels : List Label,
+      output : Maybe String }

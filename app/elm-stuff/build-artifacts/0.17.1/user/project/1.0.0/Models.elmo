@@ -1,10 +1,10 @@
 var _user$project$Models$initialModel = {
 	search: {
 		query: 'search',
-		classification: _elm_lang$core$Native_List.fromArray(
-			[]),
+		classification: _elm_lang$core$Maybe$Nothing,
 		labels: _elm_lang$core$Native_List.fromArray(
-			[])
+			[]),
+		output: _elm_lang$core$Maybe$Nothing
 	}
 };
 var _user$project$Models$Model = function (a) {

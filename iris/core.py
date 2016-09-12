@@ -40,8 +40,9 @@ class Iris:
                 "class":i,
                 "prob":p,
                 "cmds": self.class2cmd[i],
+                "args": len(self.class_functions[i]["args"])
             })
-        return results[:n]
+        return results[0] # just returning one for now
 
     # placeholder for something that needs to convert string input into a python value
     def magic_type_convert(self, x, type_=None):

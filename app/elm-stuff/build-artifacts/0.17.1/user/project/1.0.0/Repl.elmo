@@ -1,4 +1,2 @@
 var _user$project$Repl$t_s_o_l = {ctor: '_Tuple0'};
-var _user$project$Repl$seed = _elm_lang$core$Random$initialSeed(0);
-var _user$project$Repl$generator = A2(_elm_lang$core$Random$int, 0, 5);
-var _user$project$Repl$d_e_l_t_r_o_n_3_0_3_0 = _user$project$Repl$generator;
+var _user$project$Repl$d_e_l_t_r_o_n_3_0_3_0 = A2(_elm_lang$core$Basics$max, 0, 2);

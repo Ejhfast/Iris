@@ -8,5 +8,5 @@ type alias Model =
     { search : SearchBar }
 
 
-initialModel = { search = {query = "search", classification = [],
-                 labels = [] } }
+initialModel = { search = {query = "search", classification = Nothing,
+                 labels = [], output = Nothing } }
