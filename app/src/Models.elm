@@ -5,8 +5,8 @@ import SearchBars.Models exposing (SearchBar)
 -- MODEL
 
 type alias Model =
-    { search : SearchBar }
+    { search : SearchBar, history : List SearchBar }
 
 
-initialModel = { search = {query = "search", classification = Nothing,
-                 labels = [], output = Nothing } }
+initialModel = { search = {query = "", classification = Nothing,
+                 labels = [], output = Nothing }, history = [] }

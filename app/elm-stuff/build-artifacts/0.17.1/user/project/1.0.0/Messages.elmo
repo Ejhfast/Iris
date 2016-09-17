@@ -1,3 +1,7 @@
+var _user$project$Messages$Switch = function (a) {
+	return {ctor: 'Switch', _0: a};
+};
+var _user$project$Messages$Archive = {ctor: 'Archive'};
 var _user$project$Messages$SearchMsg = function (a) {
 	return {ctor: 'SearchMsg', _0: a};
 };

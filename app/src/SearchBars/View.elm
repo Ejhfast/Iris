@@ -14,8 +14,8 @@ button' str m = button [ class "button", onClick m ] [text str]
 word_span : Label -> Html Msg
 word_span label = span [class ("label-word color-"++(toString label.label)), onClick (LabelToggle label.index)] [(text label.text)]
 
-input_field : Html Msg
-input_field = input [type' "text", placeholder "your command", onInput ChangeInput ] []
+input_field : SearchBar -> Html Msg
+input_field model = input [type' "text", placeholder "your command", onInput ChangeInput, value model.query] []
 
 list_commands : List String -> Html Msg
 list_commands c =
@@ -47,7 +47,7 @@ if_run model =
 view : SearchBar -> Html Msg
 view model =
     div []
-        [ div [class "input_box"] [input_field, button' "Execute" Submit],
+        [ div [class "input_box"] [input_field model, button' "Execute" Submit],
           if_classified model,
           if_run model
         ]

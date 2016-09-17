@@ -1,3 +1,56 @@
+var _user$project$View$archive = A2(
+	_elm_lang$html$Html$button,
+	_elm_lang$core$Native_List.fromArray(
+		[
+			_elm_lang$html$Html_Attributes$class('button'),
+			_elm_lang$html$Html_Events$onClick(_user$project$Messages$Archive)
+		]),
+	_elm_lang$core$Native_List.fromArray(
+		[
+			_elm_lang$html$Html$text('Archive')
+		]));
+var _user$project$View$old_cmd = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_elm_lang$html$Html$a,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Events$onClick(
+						_user$project$Messages$Switch(model))
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html$text(model.query)
+					]))
+			]));
+};
+var _user$project$View$old_cmds = function (models) {
+	return A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$class('content')
+			]),
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			_elm_lang$core$Native_List.fromArray(
+				[
+					A2(
+					_elm_lang$html$Html$h4,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('History:')
+						]))
+				]),
+			A2(_elm_lang$core$List$map, _user$project$View$old_cmd, models)));
+};
 var _user$project$View$page = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -8,7 +61,16 @@ var _user$project$View$page = function (model) {
 				A2(
 				_elm_lang$html$Html_App$map,
 				_user$project$Messages$SearchMsg,
-				_user$project$SearchBars_View$view(model.search))
+				_user$project$SearchBars_View$view(model.search)),
+				A2(
+				_elm_lang$html$Html$div,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('content')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[_user$project$View$archive])),
+				_user$project$View$old_cmds(model.history)
 			]));
 };
 var _user$project$View$view = function (model) {

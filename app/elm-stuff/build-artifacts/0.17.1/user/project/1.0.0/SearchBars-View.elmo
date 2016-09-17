@@ -48,16 +48,19 @@ var _user$project$SearchBars_View$list_commands = function (c) {
 			},
 			c));
 };
-var _user$project$SearchBars_View$input_field = A2(
-	_elm_lang$html$Html$input,
-	_elm_lang$core$Native_List.fromArray(
-		[
-			_elm_lang$html$Html_Attributes$type$('text'),
-			_elm_lang$html$Html_Attributes$placeholder('your command'),
-			_elm_lang$html$Html_Events$onInput(_user$project$SearchBars_Messages$ChangeInput)
-		]),
-	_elm_lang$core$Native_List.fromArray(
-		[]));
+var _user$project$SearchBars_View$input_field = function (model) {
+	return A2(
+		_elm_lang$html$Html$input,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$type$('text'),
+				_elm_lang$html$Html_Attributes$placeholder('your command'),
+				_elm_lang$html$Html_Events$onInput(_user$project$SearchBars_Messages$ChangeInput),
+				_elm_lang$html$Html_Attributes$value(model.query)
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[]));
+};
 var _user$project$SearchBars_View$word_span = function (label) {
 	return A2(
 		_elm_lang$html$Html$span,
@@ -160,7 +163,7 @@ var _user$project$SearchBars_View$view = function (model) {
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_user$project$SearchBars_View$input_field,
+						_user$project$SearchBars_View$input_field(model),
 						A2(_user$project$SearchBars_View$button$, 'Execute', _user$project$SearchBars_Messages$Submit)
 					])),
 				_user$project$SearchBars_View$if_classified(model),

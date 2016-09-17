@@ -1,4 +1,5 @@
 module Messages exposing (..)
+import SearchBars.Models exposing (SearchBar)
 
 import SearchBars.Messages
 
@@ -6,3 +7,5 @@ import SearchBars.Messages
 
 type Msg
     = SearchMsg SearchBars.Messages.Msg
+    | Archive
+    | Switch SearchBar
