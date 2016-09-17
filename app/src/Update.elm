@@ -12,9 +12,5 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         SearchMsg sMsg ->
-            let (updatedSearch, cmd) = SearchBars.Update.update sMsg model.search in
-            ( { model | search = updatedSearch }, Cmd.map SearchMsg cmd )
-        Archive ->
-            ( { initialModel | history = (model.history ++ [model.search])}, Cmd.none)
-        Switch searchBar ->
-            ( { model | search = searchBar, history = model.history}, Cmd.none)
+            let (updatedSearch, cmd) = SearchBars.Update.update sMsg model.dialog in
+            ( { model | dialog = updatedSearch }, Cmd.map SearchMsg cmd )

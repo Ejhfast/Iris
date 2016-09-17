@@ -2,12 +2,10 @@ module SearchBars.Models exposing (..)
 
 -- MODEL
 
-type alias Label = {text : String, index : Int, label : Int}
+type alias Clarification = {question : String, response : Maybe String}
 
-type alias Classification = {cmds : List String, prob : Float, id : Int, args : Int, labels : List Label}
+type alias UserQuestion = {question : String, response : Maybe String, clarifications : List Clarification}
 
-type alias SearchBar =
-    { query : String,
-      classification : Maybe Classification,
-      labels : List Label,
-      output : Maybe String }
+type alias Dialog = {dialog : List UserQuestion, current : UserQuestion}
+
+emptyUQ = {question = "", response = Nothing, clarifications = []}

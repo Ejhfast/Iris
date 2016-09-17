@@ -6,69 +6,98 @@
   </head>
   <style>
   body{
-    font-family: 'helvetica neue', helvetica, sans-serif;
-    font-size:16px;
+   font-family: 'helvetica neue', helvetica, sans-serif;
+   font-size:14px;
+   color:#333;
   }
-  .title{
-    width:600px;
-    margin:0px auto;
+  .left_pane{
+    position:absolute;
+    top:0px;
+    left:0px;
+    width:80%;
+    height:100%;
+    border-right:1px solid #bbb;
   }
-  span.label-word{
-    margin: 0px 3px;
-    cursor: pointer;
+  .content_box{
+    position:absolute;
+    bottom:40px;
+    top:0px;
+    width:96%;
+    padding:20px 2% 0px 2%;
+    overflow:scroll;
   }
-  span.color-1{
-    background-color: #ffff99;
-  }
-  span.color-2{
-    background-color: #b3ecff;
-  }
-  .input_box{
-    margin:20px auto 10px auto;
-    width:600px;
-  }
-  .content{
-    margin:10px auto;
-    width: 600px;
-  }
-  .classification{
+  .message{
     margin:10px 0px;
   }
-  .seq_box{
-   margin:0px 0px 10px 0px;
-    padding:3px;
-    background-color:#efefef;
-    font-family: courier;
-    font-size:1em;
+  .message.left{
+    width:50%;
+    margin-right:50%;
+    text-align:left;
   }
-  .out_box{
-    padding:3px;
-    background-color:#666;
-    font-family: courier;
+  .message.right{
+    width:50%;
+    margin-left:50%;
+    text-align:right;
+  }
+  .message .bubble{
+   display:inline-block;
+   padding:5px 15px;
+   border-radius: 25px;
+   word-wrap: break-word;
+   white-space: pre-wrap;
+   text-align: left;
+   line-height: 1.2em;
+  }
+  .message.right .bubble{
+    background-color:#458CFF;
     color:white;
-    font-size:1em;
+  }
+  .message.left .bubble{
+   background-color:#efefef;
+   color:black;
+  }
+  .input_box{
+    position:absolute;
+    height:40px;
+    bottom:0px;
+    width:100%;
   }
   .input_box input[type="text"]{
-    width:80%;
-    padding:3px 3px;
-    font-size:1em;
-    margin-right:5px;
-  }
-  button{
+   width:100%;
+   /*margin:20px 0px;*/
+   padding:10px 1%;
+   border:none;
+   border-top:1px solid #ddd;
    font-size:1em;
   }
-  /*.button{
-    margin: 5px 0px;
-    text-decoration:none;
+  .right_pane{
+    position:absolute;
+    top:0px;
+    right:0px;
+    width:20%;
+    height:100%;
+  }
+  .subtitle{
+    margin-top:10px;
+    font-weight:800;
+    text-align: center;
+    font-size:1.2em;
+  }
+  .snippet{
+    font-weight:200;
+    padding:10px 20px;
+  }
+  span.code{
+    /*padding:2px 4px;*/
+    font-family: courier;
+    font-size:1em;
     font-weight: 800;
-    color: #333;
-    cursor: pointer;
-  }*/
+    /*background-color: #666;*/
+    /*border-radius: 15px;*/
+    /*color:white;*/
+  }
   </style>
-  <body>
-    <div id="main">
-      <div class="title"><h1>Iris</h1></title>
-    </div>
+  <body id="main">
     <script src="/app.js"></script>
   </body>
 </html>

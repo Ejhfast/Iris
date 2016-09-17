@@ -1,12 +1,16 @@
 module Models exposing (..)
 
-import SearchBars.Models exposing (SearchBar)
+import SearchBars.Models exposing (Dialog)
 
 -- MODEL
 
 type alias Model =
-    { search : SearchBar, history : List SearchBar }
+    { dialog : Dialog }
 
 
-initialModel = { search = {query = "", classification = Nothing,
-                 labels = [], output = Nothing }, history = [] }
+initialModel = { dialog = {dialog = [
+                   {question = "this is a test", response = Just "sounds great!", clarifications = [
+                      {question = "clarification?", response = Just "no problem!"}
+                   ]}
+                 ],
+                 current = {question = "", response = Nothing, clarifications = []}} }

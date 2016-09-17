@@ -1,172 +1,181 @@
-var _user$project$SearchBars_View$if_run = function (model) {
-	var _p0 = model.output;
-	if (_p0.ctor === 'Just') {
-		return A2(
+var _user$project$SearchBars_View$right_pane = A2(
+	_elm_lang$html$Html$div,
+	_elm_lang$core$Native_List.fromArray(
+		[
+			_elm_lang$html$Html_Attributes$class('right_pane')
+		]),
+	_elm_lang$core$Native_List.fromArray(
+		[
+			A2(
 			_elm_lang$html$Html$div,
 			_elm_lang$core$Native_List.fromArray(
 				[
-					_elm_lang$html$Html_Attributes$class('content')
+					_elm_lang$html$Html_Attributes$class('subtitle')
 				]),
 			_elm_lang$core$Native_List.fromArray(
 				[
-					A2(
-					_elm_lang$html$Html$div,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$class('out_box')
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html$text(_p0._0)
-						]))
-				]));
-	} else {
-		return A2(
+					_elm_lang$html$Html$text('IrisML')
+				])),
+			A2(
 			_elm_lang$html$Html$div,
 			_elm_lang$core$Native_List.fromArray(
-				[]),
+				[
+					_elm_lang$html$Html_Attributes$class('snippet')
+				]),
 			_elm_lang$core$Native_List.fromArray(
-				[]));
-	}
-};
-var _user$project$SearchBars_View$list_commands = function (c) {
+				[
+					_elm_lang$html$Html$text('A basic prototype, built in Elm. More will appear in the sidebar soon.')
+				]))
+		]));
+var _user$project$SearchBars_View$user_message = function (s) {
 	return A2(
 		_elm_lang$html$Html$div,
 		_elm_lang$core$Native_List.fromArray(
-			[]),
-		A2(
-			_elm_lang$core$List$map,
-			function (x) {
-				return A2(
-					_elm_lang$html$Html$div,
-					_elm_lang$core$Native_List.fromArray(
-						[]),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html$text(x)
-						]));
-			},
-			c));
-};
-var _user$project$SearchBars_View$input_field = function (model) {
-	return A2(
-		_elm_lang$html$Html$input,
-		_elm_lang$core$Native_List.fromArray(
 			[
-				_elm_lang$html$Html_Attributes$type$('text'),
-				_elm_lang$html$Html_Attributes$placeholder('your command'),
-				_elm_lang$html$Html_Events$onInput(_user$project$SearchBars_Messages$ChangeInput),
-				_elm_lang$html$Html_Attributes$value(model.query)
+				_elm_lang$html$Html_Attributes$class('message right')
 			]),
-		_elm_lang$core$Native_List.fromArray(
-			[]));
-};
-var _user$project$SearchBars_View$word_span = function (label) {
-	return A2(
-		_elm_lang$html$Html$span,
-		_elm_lang$core$Native_List.fromArray(
-			[
-				_elm_lang$html$Html_Attributes$class(
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					'label-word color-',
-					_elm_lang$core$Basics$toString(label.label))),
-				_elm_lang$html$Html_Events$onClick(
-				_user$project$SearchBars_Messages$LabelToggle(label.index))
-			]),
-		_elm_lang$core$Native_List.fromArray(
-			[
-				_elm_lang$html$Html$text(label.text)
-			]));
-};
-var _user$project$SearchBars_View$button$ = F2(
-	function (str, m) {
-		return A2(
-			_elm_lang$html$Html$button,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html_Attributes$class('button'),
-					_elm_lang$html$Html_Events$onClick(m)
-				]),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html$text(str)
-				]));
-	});
-var _user$project$SearchBars_View$if_classified = function (model) {
-	var _p1 = model.classification;
-	if (_p1.ctor === 'Nothing') {
-		return A2(
-			_elm_lang$html$Html$div,
-			_elm_lang$core$Native_List.fromArray(
-				[]),
-			_elm_lang$core$Native_List.fromArray(
-				[]));
-	} else {
-		return A2(
-			_elm_lang$html$Html$div,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html_Attributes$class('content')
-				]),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A2(
-					_elm_lang$html$Html$h4,
-					_elm_lang$core$Native_List.fromArray(
-						[]),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html$text('Cmd:')
-						])),
-					_user$project$SearchBars_View$list_commands(_p1._0.cmds),
-					A2(
-					_elm_lang$html$Html$h4,
-					_elm_lang$core$Native_List.fromArray(
-						[]),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html$text('Select arguments:')
-						])),
-					A2(
-					_elm_lang$html$Html$div,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$class('seq_box')
-						]),
-					A2(_elm_lang$core$List$map, _user$project$SearchBars_View$word_span, model.labels)),
-					A2(
-					_elm_lang$html$Html$div,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$class('execute')
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							A2(_user$project$SearchBars_View$button$, 'Run', _user$project$SearchBars_Messages$Execute)
-						]))
-				]));
-	}
-};
-var _user$project$SearchBars_View$view = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		_elm_lang$core$Native_List.fromArray(
-			[]),
 		_elm_lang$core$Native_List.fromArray(
 			[
 				A2(
 				_elm_lang$html$Html$div,
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_elm_lang$html$Html_Attributes$class('input_box')
+						_elm_lang$html$Html_Attributes$class('bubble')
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_user$project$SearchBars_View$input_field(model),
-						A2(_user$project$SearchBars_View$button$, 'Execute', _user$project$SearchBars_Messages$Submit)
-					])),
-				_user$project$SearchBars_View$if_classified(model),
-				_user$project$SearchBars_View$if_run(model)
+						_elm_lang$html$Html$text(s)
+					]))
+			]));
+};
+var _user$project$SearchBars_View$iris_message = function (s) {
+	return A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$class('message left')
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_elm_lang$html$Html$div,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('bubble')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html$text(s)
+					]))
+			]));
+};
+var _user$project$SearchBars_View$qr_view = function (_p0) {
+	var _p1 = _p0;
+	var im = function () {
+		var _p2 = _p1.response;
+		if (_p2.ctor === 'Just') {
+			return _elm_lang$core$Native_List.fromArray(
+				[
+					_user$project$SearchBars_View$user_message(_p2._0)
+				]);
+		} else {
+			return _elm_lang$core$Native_List.fromArray(
+				[]);
+		}
+	}();
+	var qm = _elm_lang$core$Native_List.fromArray(
+		[
+			_user$project$SearchBars_View$iris_message(_p1.question)
+		]);
+	return A2(_elm_lang$core$Basics_ops['++'], qm, im);
+};
+var _user$project$SearchBars_View$user_question_view = function (_p3) {
+	var _p4 = _p3;
+	var r_final = function () {
+		var _p5 = _p4.response;
+		if (_p5.ctor === 'Just') {
+			return _elm_lang$core$Native_List.fromArray(
+				[
+					_user$project$SearchBars_View$iris_message(_p5._0)
+				]);
+		} else {
+			return _elm_lang$core$Native_List.fromArray(
+				[]);
+		}
+	}();
+	var c_middle = A2(_elm_lang$core$List$concatMap, _user$project$SearchBars_View$qr_view, _p4.clarifications);
+	var q_init = _elm_lang$core$Native_List.fromArray(
+		[
+			_user$project$SearchBars_View$user_message(_p4.question)
+		]);
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		q_init,
+		A2(_elm_lang$core$Basics_ops['++'], c_middle, r_final));
+};
+var _user$project$SearchBars_View$content_box = function (qs) {
+	var content = A2(_elm_lang$core$List$concatMap, _user$project$SearchBars_View$user_question_view, qs);
+	return A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$class('content_box')
+			]),
+		content);
+};
+var _user$project$SearchBars_View$onEnter = function (msg) {
+	var tagger = function (code) {
+		return _elm_lang$core$Native_Utils.eq(code, 13) ? msg : _user$project$SearchBars_Messages$NoOp;
+	};
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'keydown',
+		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$keyCode));
+};
+var _user$project$SearchBars_View$input_box = function (uq) {
+	return A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$class('input_box')
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_elm_lang$html$Html$input,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$type$('text'),
+						_elm_lang$html$Html_Attributes$placeholder('your message here'),
+						_elm_lang$html$Html_Events$onInput(_user$project$SearchBars_Messages$ChangeInput),
+						_user$project$SearchBars_View$onEnter(_user$project$SearchBars_Messages$Submit),
+						_elm_lang$html$Html_Attributes$value(uq.question)
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[]))
+			]));
+};
+var _user$project$SearchBars_View$left_pane = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$class('left_pane')
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_user$project$SearchBars_View$content_box(model.dialog),
+				_user$project$SearchBars_View$input_box(model.current)
+			]));
+};
+var _user$project$SearchBars_View$page = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_user$project$SearchBars_View$left_pane(model),
+				_user$project$SearchBars_View$right_pane
 			]));
 };

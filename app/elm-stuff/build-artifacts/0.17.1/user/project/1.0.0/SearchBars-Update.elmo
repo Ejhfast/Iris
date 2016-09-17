@@ -1,97 +1,40 @@
-var _user$project$SearchBars_Update$make_labels = function (s) {
-	var words = A2(_elm_lang$core$String$split, ' ', s);
-	return A2(
-		_elm_lang$core$List$indexedMap,
-		F2(
-			function (i, x) {
-				return {index: i, text: x, label: 0};
-			}),
-		words);
-};
-var _user$project$SearchBars_Update$flip_if_match = F3(
-	function (idx, $class, clabel) {
-		var m = function () {
-			var _p0 = $class;
-			if (_p0.ctor === 'Just') {
-				return _p0._0.args + 1;
-			} else {
-				return 1;
-			}
-		}();
-		var _p1 = {
-			ctor: '_Tuple2',
-			_0: _elm_lang$core$Native_Utils.eq(clabel.index, idx),
-			_1: clabel.label
-		};
-		if (_p1._0 === true) {
-			return _elm_lang$core$Native_Utils.update(
-				clabel,
-				{
-					label: A2(_elm_lang$core$Basics_ops['%'], _p1._1 + 1, m)
-				});
-		} else {
-			return clabel;
-		}
-	});
 var _user$project$SearchBars_Update$update = F2(
 	function (msg, model) {
-		var _p2 = msg;
-		switch (_p2.ctor) {
+		var _p0 = msg;
+		switch (_p0.ctor) {
 			case 'ChangeInput':
-				var _p3 = _p2._0;
-				var labels = _user$project$SearchBars_Update$make_labels(_p3);
+				var current = model.current;
+				var new_q = _elm_lang$core$Native_Utils.update(
+					current,
+					{question: _p0._0});
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{query: _p3, labels: labels, classification: _elm_lang$core$Maybe$Nothing, output: _elm_lang$core$Maybe$Nothing}),
+						{current: new_q}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			case 'LabelToggle':
-				var match_w = A2(_user$project$SearchBars_Update$flip_if_match, _p2._0, model.classification);
-				var new_labels = A2(_elm_lang$core$List$map, match_w, model.labels);
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{labels: new_labels}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'Submit':
-				return {
-					ctor: '_Tuple2',
-					_0: model,
-					_1: _user$project$SearchBars_Commands$post_classify(model.query)
-				};
-			case 'Execute':
-				return {
-					ctor: '_Tuple2',
-					_0: model,
-					_1: _user$project$SearchBars_Commands$post_execute(model)
-				};
-			case 'ClassifyFail':
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-			case 'ClassifySucc':
-				var _p4 = _p2._0;
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							classification: _elm_lang$core$Maybe$Just(_p4),
-							labels: _p4.labels
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'ExecuteFail':
+			case 'NoOp':
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			default:
+				var curr_question = model.current;
+				var fake_out = _elm_lang$core$Native_Utils.update(
+					curr_question,
+					{
+						response: _elm_lang$core$Maybe$Just('got it :p')
+					});
+				var curr_dialog = model.dialog;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							output: _elm_lang$core$Maybe$Just(_p2._0)
+							current: _user$project$SearchBars_Models$emptyUQ,
+							dialog: A2(
+								_elm_lang$core$Basics_ops['++'],
+								curr_dialog,
+								_elm_lang$core$Native_List.fromArray(
+									[curr_question]))
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
