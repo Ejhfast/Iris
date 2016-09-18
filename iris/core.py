@@ -45,6 +45,33 @@ class Iris:
                 labels.append({"text":w,"index":i,"label":0})
         return labels
 
+    def loop(self, query_string, arg_map):
+        # first get best prediction
+        predictions = self.predict_input(query_string)[0].tolist()
+        sorted_predictions = sorted([(i,self.class2cmd[i],x) for i,x in enumerate(predictions)],key=lambda x: x[-1], reverse=True)
+        best_class = sorted_predictions[0][0]
+        to_execute = self.class_functions[best_class]
+        # now check arg_map
+        if all([arg_name in arg_map for arg_name in to_execute["args"]]):
+            # we were given all the arguments, now do type conversion
+            # need to fix the way I am dealing with types
+            args = [self.magic_type_convert(arg_map[arg_name],"Int") for arg_name in to_execute["args"]]
+            return True, to_execute["function"](*args)
+        # else we don't have all the args, so try to match
+        for cmd in self.class2cmd[best_class]:
+            succ, map = self.arg_match(query_string, cmd)
+            if succ:
+                args = [map[arg_name] for arg_name in to_execute["args"]]
+                return True, to_execute["function"](*args)
+        # else we need to start asking for args
+        for arg_name in to_execute["args"]:
+            if not (arg_name in arg_map):
+                if len(arg_map) == 0:
+                    return False, "I think you want to \"{}\". What is the value of {}?".format(cmd,arg_name)
+                return False, "What is the value of {}?".format(arg_name)
+        # this shouldn't happen
+        return False, None
+
     def best_n(self, query, n=1):
         probs = self.model.predict_log_proba(self.vectorizer.transform([query]))[0]
         results = []

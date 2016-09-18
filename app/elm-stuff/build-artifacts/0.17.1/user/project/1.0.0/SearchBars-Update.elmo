@@ -1,3 +1,16 @@
+var _user$project$SearchBars_Update$update_current_messages = F2(
+	function (q, m) {
+		var curr_messages = q.messages;
+		return _elm_lang$core$Native_Utils.update(
+			q,
+			{
+				messages: A2(
+					_elm_lang$core$Basics_ops['++'],
+					curr_messages,
+					_elm_lang$core$Native_List.fromArray(
+						[m]))
+			});
+	});
 var _user$project$SearchBars_Update$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
@@ -16,21 +29,11 @@ var _user$project$SearchBars_Update$update = F2(
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			case 'LoopSucc':
 				var _p2 = _p0._0;
+				var iris_message = {origin: 'iris', content: _p2.content, kind: _p2.action};
+				var update_current = A2(_user$project$SearchBars_Update$update_current_messages, model.current, iris_message);
 				var _p1 = _p2.action;
 				if (_p1 === 'succeed') {
 					var curr_dialog = model.dialog;
-					var iris_message = {origin: 'iris', content: _p2.content};
-					var curr_messages = model.current.messages;
-					var current = model.current;
-					var update_current = _elm_lang$core$Native_Utils.update(
-						current,
-						{
-							messages: A2(
-								_elm_lang$core$Basics_ops['++'],
-								curr_messages,
-								_elm_lang$core$Native_List.fromArray(
-									[iris_message]))
-						});
 					var new_question = {
 						id: model.current.id + 1,
 						messages: _elm_lang$core$Native_List.fromArray(
@@ -51,21 +54,17 @@ var _user$project$SearchBars_Update$update = F2(
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				} else {
-					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{current: update_current}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
 				}
 			default:
-				var new_message = {origin: 'user', content: model.input};
-				var curr_question = model.current;
-				var curr_messages = curr_question.messages;
-				var new_current = _elm_lang$core$Native_Utils.update(
-					curr_question,
-					{
-						messages: A2(
-							_elm_lang$core$Basics_ops['++'],
-							curr_messages,
-							_elm_lang$core$Native_List.fromArray(
-								[new_message]))
-					});
+				var new_message = {origin: 'user', content: model.input, kind: 'question'};
+				var new_current = A2(_user$project$SearchBars_Update$update_current_messages, model.current, new_message);
 				var curr_dialog = model.dialog;
 				return {
 					ctor: '_Tuple2',

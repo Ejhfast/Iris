@@ -16,9 +16,9 @@ var _user$project$SearchBars_Models$Dialog = F3(
 	function (a, b, c) {
 		return {dialog: a, current: b, input: c};
 	});
-var _user$project$SearchBars_Models$Message = F2(
-	function (a, b) {
-		return {origin: a, content: b};
+var _user$project$SearchBars_Models$Message = F3(
+	function (a, b, c) {
+		return {origin: a, content: b, kind: c};
 	});
 var _user$project$SearchBars_Models$Question = F2(
 	function (a, b) {

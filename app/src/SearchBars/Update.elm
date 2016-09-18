@@ -21,6 +21,10 @@ import Debug
 --     Nothing ->
 --       {q | question = Just s}
 
+update_current_messages : Question -> Message -> Question
+update_current_messages q m =
+  let curr_messages = q.messages in
+  { q | messages = (curr_messages ++ [m])}
 
 update : Msg -> Conversation -> (Conversation, Cmd Msg)
 update msg model =
@@ -30,22 +34,19 @@ update msg model =
     NoOp -> (model, Cmd.none)
     LoopFail error -> (model, Cmd.none)
     LoopSucc response ->
+     let iris_message = { origin = "iris", content = response.content, kind = response.action }
+         update_current = update_current_messages model.current iris_message in
      case response.action of
        "succeed" ->
          let new_question = {id = model.current.id + 1, messages = []}
-             current = model.current
-             curr_messages = model.current.messages
-             iris_message = { origin = "iris", content = response.content }
-             update_current = { current | messages = (curr_messages ++ [iris_message]) }
              curr_dialog = model.dialog in
          ( {model | current = new_question, dialog = (curr_dialog ++ [update_current]) }, Cmd.none )
-       _ -> (model, Cmd.none)
+       _ ->
+         ( { model | current = update_current }, Cmd.none)
     Submit ->
       let curr_dialog = model.dialog
-          curr_question = model.current
-          curr_messages = curr_question.messages
-          new_message = { origin = "user", content = model.input }
-          new_current = { curr_question | messages = (curr_messages ++ [new_message]) } in
+          new_message = { origin = "user", content = model.input, kind = "question" }
+          new_current = update_current_messages model.current new_message in
       ({ model | current = new_current, input = ""}, post_loop new_current)
 
 -- -- UPDATE

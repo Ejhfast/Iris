@@ -18,13 +18,28 @@ def add_cors(route):
                  expose_headers="*",
                  allow_headers="*")})
 
+def parse_args(j_data):
+    messages = j_data['messages']
+    fail_indexes = [i for i,x in enumerate(messages) if x["origin"] == "iris" and x["kind"] == "fail" ]
+    args = {}
+    for i in fail_indexes:
+        iris_ask = messages[i]["content"]
+        var = iris_ask.split()[-1][:-1]
+        print(var)
+        args[var] = messages[i+1]["content"]
+    return args
 
 async def loop(request):
     data = await request.post()
     question = json.loads(data["question"])
-    print(question['messages'][0]['content'])
-    res = iris.execute(question['messages'][0]['content'])[1]
-    results = {"action":"succeed", "content":"{}".format(res)}
+    print(question)
+    top_level_q = question['messages'][0]['content']
+    args = parse_args(question)
+    res = iris.loop(top_level_q, args)
+    if res[0]:
+        results = {"action":"succeed", "content":"{}".format(res[1])}
+    else:
+        results = {"action":"fail", "content":"{}".format(res[1])}
     return web.json_response(results)
 
 add_cors(app.router.add_route('POST', '/loop', loop))

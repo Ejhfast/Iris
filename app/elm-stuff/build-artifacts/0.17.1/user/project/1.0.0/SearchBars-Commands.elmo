@@ -80,6 +80,11 @@ var _user$project$SearchBars_Commands$encode_message = function (m) {
 				ctor: '_Tuple2',
 				_0: 'content',
 				_1: _elm_lang$core$Json_Encode$string(m.content)
+			},
+				{
+				ctor: '_Tuple2',
+				_0: 'kind',
+				_1: _elm_lang$core$Json_Encode$string(m.kind)
 			}
 			]));
 };

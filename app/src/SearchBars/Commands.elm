@@ -10,7 +10,7 @@ import Debug
 
 encode_message : Message -> JS.Value
 encode_message m =
-  JS.object [("origin", JS.string m.origin), ("content", JS.string m.content)]
+  JS.object [("origin", JS.string m.origin), ("content", JS.string m.content), ("kind", JS.string m.kind)]
 
 
 encode_question : Question -> JS.Value
