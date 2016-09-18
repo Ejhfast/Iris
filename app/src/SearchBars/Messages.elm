@@ -6,6 +6,8 @@ type Msg
       = ChangeInput String
       | NoOp
       | Submit
+      | LoopFail (Http.Error)
+      | LoopSucc (Response)
 
 -- MESSAGES
 

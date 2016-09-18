@@ -1,3 +1,9 @@
+var _user$project$SearchBars_Messages$LoopSucc = function (a) {
+	return {ctor: 'LoopSucc', _0: a};
+};
+var _user$project$SearchBars_Messages$LoopFail = function (a) {
+	return {ctor: 'LoopFail', _0: a};
+};
 var _user$project$SearchBars_Messages$Submit = {ctor: 'Submit'};
 var _user$project$SearchBars_Messages$NoOp = {ctor: 'NoOp'};
 var _user$project$SearchBars_Messages$ChangeInput = function (a) {

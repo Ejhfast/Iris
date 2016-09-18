@@ -1,5 +1,5 @@
 module SearchBars.Commands exposing (..)
-import SearchBars.Models exposing (Clarification, UserQuestion)
+import SearchBars.Models exposing (..)
 import SearchBars.Messages exposing (Msg(..))
 import Http
 import Json.Decode as Decode exposing ((:=))
@@ -8,11 +8,31 @@ import Json.Encode as JS
 import Debug
 
 
+encode_message : Message -> JS.Value
+encode_message m =
+  JS.object [("origin", JS.string m.origin), ("content", JS.string m.content)]
+
+
+encode_question : Question -> JS.Value
+encode_question m =
+   JS.object [("id", JS.int m.id), ("messages", JS.list (List.map encode_message m.messages))]
+
+loop_url = "http://localhost:8000/loop"
+
+decode_response : Decode.Decoder Response
+decode_response = Decode.object2 Response ("action" := Decode.string) ("content" := Decode.string)
+
+post_loop question =
+    let question_data = encode_question question
+        data = Http.multipart [ Http.stringData "question" (JS.encode 0 question_data)] in
+    Http.post decode_response loop_url data
+        |> Task.perform LoopFail LoopSucc
+
 -- encoders
 
 encode_clarification : Clarification -> JS.Value
 encode_clarification {question, response} =
-  JS.object [("question", JS.string question), ("response", encode_maybe_string response)]
+  JS.object [("question", encode_maybe_string question), ("response", encode_maybe_string response)]
 
 encode_clarifications : List Clarification -> JS.Value
 encode_clarifications c_lst =
@@ -24,11 +44,11 @@ encode_maybe_string ms =
     Just s -> JS.string s
     Nothing -> JS.null
 
-encode_question : UserQuestion -> JS.Value
-encode_question {question, response, clarifications} =
-  JS.object [("question", JS.string question),
-             ("response", encode_maybe_string response),
-             ("clarifications", encode_clarifications clarifications)]
+-- encode_question : UserQuestion -> JS.Value
+-- encode_question {question, response, clarifications} =
+--   JS.object [("question", encode_maybe_string question),
+--              ("response", encode_maybe_string response),
+--              ("clarifications", encode_clarifications clarifications)]
 
 --decoders
 
@@ -42,13 +62,13 @@ nullOr decoder =
 clarification_decoder : Decode.Decoder Clarification
 clarification_decoder =
   Decode.object2 Clarification
-    ("question" := Decode.string)
+    ("question" := nullOr Decode.string)
     ("response" := nullOr Decode.string)
 
 question_decoder : Decode.Decoder UserQuestion
 question_decoder =
   Decode.object3 UserQuestion
-    ("question" := Decode.string)
+    ("question" := nullOr Decode.string)
     ("response" := nullOr Decode.string)
     ("clarifications" := Decode.list clarification_decoder)
 

@@ -1,25 +1,13 @@
 var _user$project$Models$initialModel = {
 	dialog: {
 		dialog: _elm_lang$core$Native_List.fromArray(
-			[
-				{
-				question: 'this is a test',
-				response: _elm_lang$core$Maybe$Just('sounds great!'),
-				clarifications: _elm_lang$core$Native_List.fromArray(
-					[
-						{
-						question: 'clarification?',
-						response: _elm_lang$core$Maybe$Just('no problem!')
-					}
-					])
-			}
-			]),
+			[]),
 		current: {
-			question: '',
-			response: _elm_lang$core$Maybe$Nothing,
-			clarifications: _elm_lang$core$Native_List.fromArray(
+			id: 0,
+			messages: _elm_lang$core$Native_List.fromArray(
 				[])
-		}
+		},
+		input: ''
 	}
 };
 var _user$project$Models$Model = function (a) {

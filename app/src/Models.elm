@@ -1,16 +1,21 @@
 module Models exposing (..)
-
-import SearchBars.Models exposing (Dialog)
+import SearchBars.Models exposing (..)
 
 -- MODEL
 
 type alias Model =
-    { dialog : Dialog }
+    { dialog : Conversation }
 
 
-initialModel = { dialog = {dialog = [
-                   {question = "this is a test", response = Just "sounds great!", clarifications = [
-                      {question = "clarification?", response = Just "no problem!"}
-                   ]}
-                 ],
-                 current = {question = "", response = Nothing, clarifications = []}} }
+initialModel = {dialog = { dialog = [],
+                           current = { id = 0,
+                                       messages = [  ] },
+                           input = ""}}
+
+-- initialModel = { dialog = {dialog = [
+--                    {question = Just "this is a test", response = Just "sounds great!", clarifications = [
+--                       {question = Just "clarification?", response = Just "no problem!"}
+--                    ]}
+--                  ],
+--                  current = {question = Nothing, response = Nothing, clarifications = []},
+--                  input = "" }}

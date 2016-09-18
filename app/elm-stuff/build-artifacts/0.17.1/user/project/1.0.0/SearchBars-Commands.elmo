@@ -9,7 +9,10 @@ var _user$project$SearchBars_Commands$nullOr = function (decoder) {
 var _user$project$SearchBars_Commands$clarification_decoder = A3(
 	_elm_lang$core$Json_Decode$object2,
 	_user$project$SearchBars_Models$Clarification,
-	A2(_elm_lang$core$Json_Decode_ops[':='], 'question', _elm_lang$core$Json_Decode$string),
+	A2(
+		_elm_lang$core$Json_Decode_ops[':='],
+		'question',
+		_user$project$SearchBars_Commands$nullOr(_elm_lang$core$Json_Decode$string)),
 	A2(
 		_elm_lang$core$Json_Decode_ops[':='],
 		'response',
@@ -17,7 +20,10 @@ var _user$project$SearchBars_Commands$clarification_decoder = A3(
 var _user$project$SearchBars_Commands$question_decoder = A4(
 	_elm_lang$core$Json_Decode$object3,
 	_user$project$SearchBars_Models$UserQuestion,
-	A2(_elm_lang$core$Json_Decode_ops[':='], 'question', _elm_lang$core$Json_Decode$string),
+	A2(
+		_elm_lang$core$Json_Decode_ops[':='],
+		'question',
+		_user$project$SearchBars_Commands$nullOr(_elm_lang$core$Json_Decode$string)),
 	A2(
 		_elm_lang$core$Json_Decode_ops[':='],
 		'response',
@@ -42,7 +48,7 @@ var _user$project$SearchBars_Commands$encode_clarification = function (_p1) {
 				{
 				ctor: '_Tuple2',
 				_0: 'question',
-				_1: _elm_lang$core$Json_Encode$string(_p2.question)
+				_1: _user$project$SearchBars_Commands$encode_maybe_string(_p2.question)
 			},
 				{
 				ctor: '_Tuple2',
@@ -55,25 +61,58 @@ var _user$project$SearchBars_Commands$encode_clarifications = function (c_lst) {
 	return _elm_lang$core$Json_Encode$list(
 		A2(_elm_lang$core$List$map, _user$project$SearchBars_Commands$encode_clarification, c_lst));
 };
-var _user$project$SearchBars_Commands$encode_question = function (_p3) {
-	var _p4 = _p3;
+var _user$project$SearchBars_Commands$decode_response = A3(
+	_elm_lang$core$Json_Decode$object2,
+	_user$project$SearchBars_Models$Response,
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'action', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'content', _elm_lang$core$Json_Decode$string));
+var _user$project$SearchBars_Commands$loop_url = 'http://localhost:8000/loop';
+var _user$project$SearchBars_Commands$encode_message = function (m) {
 	return _elm_lang$core$Json_Encode$object(
 		_elm_lang$core$Native_List.fromArray(
 			[
 				{
 				ctor: '_Tuple2',
-				_0: 'question',
-				_1: _elm_lang$core$Json_Encode$string(_p4.question)
+				_0: 'origin',
+				_1: _elm_lang$core$Json_Encode$string(m.origin)
 			},
 				{
 				ctor: '_Tuple2',
-				_0: 'response',
-				_1: _user$project$SearchBars_Commands$encode_maybe_string(_p4.response)
-			},
-				{
-				ctor: '_Tuple2',
-				_0: 'clarifications',
-				_1: _user$project$SearchBars_Commands$encode_clarifications(_p4.clarifications)
+				_0: 'content',
+				_1: _elm_lang$core$Json_Encode$string(m.content)
 			}
 			]));
+};
+var _user$project$SearchBars_Commands$encode_question = function (m) {
+	return _elm_lang$core$Json_Encode$object(
+		_elm_lang$core$Native_List.fromArray(
+			[
+				{
+				ctor: '_Tuple2',
+				_0: 'id',
+				_1: _elm_lang$core$Json_Encode$int(m.id)
+			},
+				{
+				ctor: '_Tuple2',
+				_0: 'messages',
+				_1: _elm_lang$core$Json_Encode$list(
+					A2(_elm_lang$core$List$map, _user$project$SearchBars_Commands$encode_message, m.messages))
+			}
+			]));
+};
+var _user$project$SearchBars_Commands$post_loop = function (question) {
+	var question_data = _user$project$SearchBars_Commands$encode_question(question);
+	var data = _evancz$elm_http$Http$multipart(
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_evancz$elm_http$Http$stringData,
+				'question',
+				A2(_elm_lang$core$Json_Encode$encode, 0, question_data))
+			]));
+	return A3(
+		_elm_lang$core$Task$perform,
+		_user$project$SearchBars_Messages$LoopFail,
+		_user$project$SearchBars_Messages$LoopSucc,
+		A3(_evancz$elm_http$Http$post, _user$project$SearchBars_Commands$decode_response, _user$project$SearchBars_Commands$loop_url, data));
 };

@@ -4,9 +4,8 @@ import Html exposing (Html, div, text, input, a, span, h4, button, body)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick, on, keyCode)
 import SearchBars.Messages exposing (Msg(..))
-import SearchBars.Models exposing (Clarification, UserQuestion, Dialog)
+import SearchBars.Models exposing (..)
 import Json.Decode as JS
-
 
 onEnter : Msg -> Html.Attribute Msg
 onEnter msg =
@@ -16,6 +15,22 @@ onEnter msg =
   in
     on "keydown" (JS.map tagger keyCode)
 
+render_message : Message -> Html Msg
+render_message m =
+  case m.origin of
+    "iris" -> iris_message m.content
+    _ -> user_message m.content
+
+render_question : Question -> List (Html Msg)
+render_question q =
+  List.map render_message q.messages
+
+render_conversation : Conversation -> List (Html Msg)
+render_conversation c =
+  let old_messages = List.concatMap render_question c.dialog
+      cur_question = render_question c.current in
+  old_messages ++ cur_question
+
 iris_message : String -> Html Msg
 iris_message s =
   div [class "message left"] [div [class "bubble"] [text s]]
@@ -24,38 +39,22 @@ user_message : String -> Html Msg
 user_message s =
   div [class "message right"] [div [class "bubble"] [text s]]
 
-qr_view {question, response} =
-  let qm = [iris_message question]
-      im = (case response of
-            Just r -> [user_message r]
-            Nothing -> []) in
-  qm ++ im
-
-user_question_view : UserQuestion -> List (Html Msg)
-user_question_view {question, response, clarifications} =
-  let q_init = [user_message question]
-      c_middle = List.concatMap qr_view clarifications
-      r_final = (case response of
-                 Just r -> [iris_message r]
-                 Nothing -> []) in
-  q_init ++ c_middle ++ r_final
-
-content_box : List UserQuestion -> Html Msg
-content_box qs =
-  let content = List.concatMap user_question_view qs in
+content_box : Conversation -> Html Msg
+content_box conv =
+  let content = render_conversation conv in
   div [class "content_box"] content
 
-input_box : UserQuestion -> Html Msg
+input_box : String -> Html Msg
 input_box uq =
   div [class "input_box"]
       [input [type' "text", placeholder "your message here",
-              onInput ChangeInput, onEnter Submit, value uq.question] []]
+              onInput ChangeInput, onEnter Submit, value uq] []]
 
-left_pane : Dialog -> Html Msg
-left_pane model =
+left_pane : Conversation -> Html Msg
+left_pane conv =
   div [class "left_pane"] [
-    content_box model.dialog,
-    input_box model.current
+    content_box conv,
+    input_box conv.input
   ]
 
 right_pane : Html Msg
@@ -65,12 +64,34 @@ right_pane =
     div [class "snippet"] [text "A basic prototype, built in Elm. More will appear in the sidebar soon."]
   ]
 
-page : Dialog -> Html Msg
+page : Conversation -> Html Msg
 page model =
   div [] [
     left_pane model,
     right_pane
   ]
+
+-- slightly older
+
+qr_view {question, response} =
+  let qm = maybe_content iris_message question
+      im = maybe_content user_message response in
+  qm ++ im
+
+maybe_content : (String -> Html Msg) -> Maybe String -> List (Html Msg)
+maybe_content f c =
+ case c of
+   Just s -> [f s]
+   Nothing -> []
+
+user_question_view : UserQuestion -> List (Html Msg)
+user_question_view {question, response, clarifications} =
+  let q_init = maybe_content user_message question
+      c_middle = List.concatMap qr_view clarifications
+      r_final = maybe_content iris_message response in
+  q_init ++ c_middle ++ r_final
+
+
 
 -- old stuff
 

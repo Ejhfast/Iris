@@ -1,7 +1,7 @@
 module SearchBars.Update exposing (..)
 
 import SearchBars.Messages exposing (Msg(..))
-import SearchBars.Models exposing (Dialog, UserQuestion, Clarification, emptyUQ)
+import SearchBars.Models exposing (..)
 import SearchBars.Commands exposing (..)
 import Random
 import List
@@ -11,19 +11,42 @@ import Http
 import Debug
 
 
-update : Msg -> Dialog -> (Dialog, Cmd Msg)
+-- update_question : String -> UserQuestion -> UserQuestion
+-- update_question s q =
+--   case q.question of
+--     Just eq ->
+--       let curr_clar = q.clarifications
+--           new_info = {question = Nothing, response = Just s} in
+--       { q | clarifications = (curr_clar ++ [new_info])}
+--     Nothing ->
+--       {q | question = Just s}
+
+
+update : Msg -> Conversation -> (Conversation, Cmd Msg)
 update msg model =
   case msg of
     ChangeInput s ->
-      let current = model.current
-          new_q = {current | question = s} in
-      ({ model | current = new_q }, Cmd.none)
+      ({ model | input = s }, Cmd.none)
     NoOp -> (model, Cmd.none)
+    LoopFail error -> (model, Cmd.none)
+    LoopSucc response ->
+     case response.action of
+       "succeed" ->
+         let new_question = {id = model.current.id + 1, messages = []}
+             current = model.current
+             curr_messages = model.current.messages
+             iris_message = { origin = "iris", content = response.content }
+             update_current = { current | messages = (curr_messages ++ [iris_message]) }
+             curr_dialog = model.dialog in
+         ( {model | current = new_question, dialog = (curr_dialog ++ [update_current]) }, Cmd.none )
+       _ -> (model, Cmd.none)
     Submit ->
       let curr_dialog = model.dialog
           curr_question = model.current
-          fake_out = { curr_question | response = Just "got it :p" } in
-      ({ model | current = emptyUQ, dialog = (curr_dialog ++ [curr_question])}, Cmd.none)
+          curr_messages = curr_question.messages
+          new_message = { origin = "user", content = model.input }
+          new_current = { curr_question | messages = (curr_messages ++ [new_message]) } in
+      ({ model | current = new_current, input = ""}, post_loop new_current)
 
 -- -- UPDATE
 --

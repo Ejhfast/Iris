@@ -3,40 +3,76 @@ var _user$project$SearchBars_Update$update = F2(
 		var _p0 = msg;
 		switch (_p0.ctor) {
 			case 'ChangeInput':
-				var current = model.current;
-				var new_q = _elm_lang$core$Native_Utils.update(
-					current,
-					{question: _p0._0});
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{current: new_q}),
+						{input: _p0._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'NoOp':
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			case 'LoopFail':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			case 'LoopSucc':
+				var _p2 = _p0._0;
+				var _p1 = _p2.action;
+				if (_p1 === 'succeed') {
+					var curr_dialog = model.dialog;
+					var iris_message = {origin: 'iris', content: _p2.content};
+					var curr_messages = model.current.messages;
+					var current = model.current;
+					var update_current = _elm_lang$core$Native_Utils.update(
+						current,
+						{
+							messages: A2(
+								_elm_lang$core$Basics_ops['++'],
+								curr_messages,
+								_elm_lang$core$Native_List.fromArray(
+									[iris_message]))
+						});
+					var new_question = {
+						id: model.current.id + 1,
+						messages: _elm_lang$core$Native_List.fromArray(
+							[])
+					};
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								current: new_question,
+								dialog: A2(
+									_elm_lang$core$Basics_ops['++'],
+									curr_dialog,
+									_elm_lang$core$Native_List.fromArray(
+										[update_current]))
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				}
 			default:
+				var new_message = {origin: 'user', content: model.input};
 				var curr_question = model.current;
-				var fake_out = _elm_lang$core$Native_Utils.update(
+				var curr_messages = curr_question.messages;
+				var new_current = _elm_lang$core$Native_Utils.update(
 					curr_question,
 					{
-						response: _elm_lang$core$Maybe$Just('got it :p')
+						messages: A2(
+							_elm_lang$core$Basics_ops['++'],
+							curr_messages,
+							_elm_lang$core$Native_List.fromArray(
+								[new_message]))
 					});
 				var curr_dialog = model.dialog;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{
-							current: _user$project$SearchBars_Models$emptyUQ,
-							dialog: A2(
-								_elm_lang$core$Basics_ops['++'],
-								curr_dialog,
-								_elm_lang$core$Native_List.fromArray(
-									[curr_question]))
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
+						{current: new_current, input: ''}),
+					_1: _user$project$SearchBars_Commands$post_loop(new_current)
 				};
 		}
 	});

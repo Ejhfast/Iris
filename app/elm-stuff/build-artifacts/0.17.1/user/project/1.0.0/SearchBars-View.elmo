@@ -1,3 +1,16 @@
+var _user$project$SearchBars_View$maybe_content = F2(
+	function (f, c) {
+		var _p0 = c;
+		if (_p0.ctor === 'Just') {
+			return _elm_lang$core$Native_List.fromArray(
+				[
+					f(_p0._0)
+				]);
+		} else {
+			return _elm_lang$core$Native_List.fromArray(
+				[]);
+		}
+	});
 var _user$project$SearchBars_View$right_pane = A2(
 	_elm_lang$html$Html$div,
 	_elm_lang$core$Native_List.fromArray(
@@ -69,52 +82,40 @@ var _user$project$SearchBars_View$iris_message = function (s) {
 					]))
 			]));
 };
-var _user$project$SearchBars_View$qr_view = function (_p0) {
-	var _p1 = _p0;
-	var im = function () {
-		var _p2 = _p1.response;
-		if (_p2.ctor === 'Just') {
-			return _elm_lang$core$Native_List.fromArray(
-				[
-					_user$project$SearchBars_View$user_message(_p2._0)
-				]);
-		} else {
-			return _elm_lang$core$Native_List.fromArray(
-				[]);
-		}
-	}();
-	var qm = _elm_lang$core$Native_List.fromArray(
-		[
-			_user$project$SearchBars_View$iris_message(_p1.question)
-		]);
+var _user$project$SearchBars_View$qr_view = function (_p1) {
+	var _p2 = _p1;
+	var im = A2(_user$project$SearchBars_View$maybe_content, _user$project$SearchBars_View$user_message, _p2.response);
+	var qm = A2(_user$project$SearchBars_View$maybe_content, _user$project$SearchBars_View$iris_message, _p2.question);
 	return A2(_elm_lang$core$Basics_ops['++'], qm, im);
 };
 var _user$project$SearchBars_View$user_question_view = function (_p3) {
 	var _p4 = _p3;
-	var r_final = function () {
-		var _p5 = _p4.response;
-		if (_p5.ctor === 'Just') {
-			return _elm_lang$core$Native_List.fromArray(
-				[
-					_user$project$SearchBars_View$iris_message(_p5._0)
-				]);
-		} else {
-			return _elm_lang$core$Native_List.fromArray(
-				[]);
-		}
-	}();
+	var r_final = A2(_user$project$SearchBars_View$maybe_content, _user$project$SearchBars_View$iris_message, _p4.response);
 	var c_middle = A2(_elm_lang$core$List$concatMap, _user$project$SearchBars_View$qr_view, _p4.clarifications);
-	var q_init = _elm_lang$core$Native_List.fromArray(
-		[
-			_user$project$SearchBars_View$user_message(_p4.question)
-		]);
+	var q_init = A2(_user$project$SearchBars_View$maybe_content, _user$project$SearchBars_View$user_message, _p4.question);
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		q_init,
 		A2(_elm_lang$core$Basics_ops['++'], c_middle, r_final));
 };
-var _user$project$SearchBars_View$content_box = function (qs) {
-	var content = A2(_elm_lang$core$List$concatMap, _user$project$SearchBars_View$user_question_view, qs);
+var _user$project$SearchBars_View$render_message = function (m) {
+	var _p5 = m.origin;
+	if (_p5 === 'iris') {
+		return _user$project$SearchBars_View$iris_message(m.content);
+	} else {
+		return _user$project$SearchBars_View$user_message(m.content);
+	}
+};
+var _user$project$SearchBars_View$render_question = function (q) {
+	return A2(_elm_lang$core$List$map, _user$project$SearchBars_View$render_message, q.messages);
+};
+var _user$project$SearchBars_View$render_conversation = function (c) {
+	var cur_question = _user$project$SearchBars_View$render_question(c.current);
+	var old_messages = A2(_elm_lang$core$List$concatMap, _user$project$SearchBars_View$render_question, c.dialog);
+	return A2(_elm_lang$core$Basics_ops['++'], old_messages, cur_question);
+};
+var _user$project$SearchBars_View$content_box = function (conv) {
+	var content = _user$project$SearchBars_View$render_conversation(conv);
 	return A2(
 		_elm_lang$html$Html$div,
 		_elm_lang$core$Native_List.fromArray(
@@ -149,13 +150,13 @@ var _user$project$SearchBars_View$input_box = function (uq) {
 						_elm_lang$html$Html_Attributes$placeholder('your message here'),
 						_elm_lang$html$Html_Events$onInput(_user$project$SearchBars_Messages$ChangeInput),
 						_user$project$SearchBars_View$onEnter(_user$project$SearchBars_Messages$Submit),
-						_elm_lang$html$Html_Attributes$value(uq.question)
+						_elm_lang$html$Html_Attributes$value(uq)
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[]))
 			]));
 };
-var _user$project$SearchBars_View$left_pane = function (model) {
+var _user$project$SearchBars_View$left_pane = function (conv) {
 	return A2(
 		_elm_lang$html$Html$div,
 		_elm_lang$core$Native_List.fromArray(
@@ -164,8 +165,8 @@ var _user$project$SearchBars_View$left_pane = function (model) {
 			]),
 		_elm_lang$core$Native_List.fromArray(
 			[
-				_user$project$SearchBars_View$content_box(model.dialog),
-				_user$project$SearchBars_View$input_box(model.current)
+				_user$project$SearchBars_View$content_box(conv),
+				_user$project$SearchBars_View$input_box(conv.input)
 			]));
 };
 var _user$project$SearchBars_View$page = function (model) {

@@ -18,6 +18,17 @@ def add_cors(route):
                  expose_headers="*",
                  allow_headers="*")})
 
+
+async def loop(request):
+    data = await request.post()
+    question = json.loads(data["question"])
+    print(question['messages'][0]['content'])
+    res = iris.execute(question['messages'][0]['content'])[1]
+    results = {"action":"succeed", "content":"{}".format(res)}
+    return web.json_response(results)
+
+add_cors(app.router.add_route('POST', '/loop', loop))
+
 async def classify_query(request):
     data = await request.post()
     query = data["query"]
