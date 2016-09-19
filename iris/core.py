@@ -13,6 +13,16 @@ class IrisType:
 
 class Int(IrisType):
     name = "Int"
+    def is_type(value):
+        return isinstance(value, int)
+    def convert_type(value, env):
+        if value in env and Int.is_type(env[value]):
+            return True, env[value]
+        else:
+            try:
+                return True, int(value)
+            except:
+                return False, "Could not find Int type for {}".format(value)
 
 class Any(IrisType):
     name = "Any"
@@ -63,20 +73,32 @@ class Iris:
         # now check arg_map
         if all([arg_name in arg_map for arg_name in to_execute["args"]]):
             # we were given all the arguments, now do type conversion
-            # need to fix the way I am dealing with types
             print(to_execute["types"])
-            args = [self.magic_type_convert(arg_map[arg_name],to_execute["types"][arg_name].name) for arg_name in to_execute["args"]]
-            return True, to_execute["function"](*args)
+            s_args = [self.magic_type_convert(arg_map[arg_name], to_execute["types"][arg_name]) for arg_name in to_execute["args"]]
+            # this is redundant and needs to be refactored --
+            # also, need at least a 3 way response value (True -- complete, False -- more args, False -- kill it)
+            succs = [x[0] for x in s_args]
+            args = [x[1] for x in s_args]
+            if all(succs):
+                return True, to_execute["function"](*args)
+            else:
+                return False, "I ran into a problem:\n"+"\n".join([str(x) for x in zip(["arg{}".format(i) for i in range(1,len(args)+1)],args)])
         # else we don't have all the args, so try to match
         for cmd in self.class2cmd[best_class]:
             succ, map = self.arg_match(query_string, cmd, to_execute["types"])
             if succ:
-                args = [map[arg_name] for arg_name in to_execute["args"]]
-                return True, to_execute["function"](*args)
-        # else we need to start asking for args
+                s_args = [map[arg_name] for arg_name in to_execute["args"]]
+                succs = [x[0] for x in s_args]
+                args = [x[1] for x in s_args]
+                print(succs,args)
+                if all(succs):
+                    return True, to_execute["function"](*args)
+                else:
+                    return False, "I ran into a problem:\n"+"\n".join([str(x) for x in zip(["arg{}".format(i) for i in range(1,len(args)+1)],args)])
+        # if all that fails we need to start asking for args
         for arg_name in to_execute["args"]:
             if not (arg_name in arg_map):
-                if len(arg_map) == 0:
+                if len(arg_map) == 0: # implies this is the first argument asked for
                     return False, "I think you want to \"{}\". What is the value of {}?".format(cmd,arg_name)
                 return False, "What is the value of {}?".format(arg_name)
         # this shouldn't happen
@@ -116,16 +138,8 @@ class Iris:
         return res
 
     # placeholder for something that needs to convert string input into a python value
-    def magic_type_convert(self, x, type_=None):
-        if x in self.env:
-            return self.env[x]
-        elif type_ == "Int":
-            try:
-                return int(x)
-            except:
-                raise(Exception("Expected type Int but got {}".format(x)))
-        else:
-            return x
+    def magic_type_convert(self, x, type_):
+        return type_.convert_type(x,self.env)
 
     # is this word an argument?
     def is_arg(self, s):
