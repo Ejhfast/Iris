@@ -42,7 +42,7 @@ user_message s =
 content_box : Conversation -> Html Msg
 content_box conv =
   let content = render_conversation conv in
-  div [class "content_box"] content
+  div [class "content_box", id "message_pane"] content
 
 input_box : String -> Html Msg
 input_box uq =

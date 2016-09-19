@@ -120,7 +120,8 @@ var _user$project$SearchBars_View$content_box = function (conv) {
 		_elm_lang$html$Html$div,
 		_elm_lang$core$Native_List.fromArray(
 			[
-				_elm_lang$html$Html_Attributes$class('content_box')
+				_elm_lang$html$Html_Attributes$class('content_box'),
+				_elm_lang$html$Html_Attributes$id('message_pane')
 			]),
 		content);
 };

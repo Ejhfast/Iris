@@ -6,7 +6,9 @@ import Json.Decode as Decode exposing ((:=))
 import Task
 import Json.Encode as JS
 import Debug
+import Dom.Scroll
 
+update_scroll = Dom.Scroll.toBottom "message_pane" |> Task.perform ScrollFail ScrollSucc
 
 encode_message : Message -> JS.Value
 encode_message m =

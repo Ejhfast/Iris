@@ -121,3 +121,8 @@ var _user$project$SearchBars_Commands$post_loop = function (question) {
 		_user$project$SearchBars_Messages$LoopSucc,
 		A3(_evancz$elm_http$Http$post, _user$project$SearchBars_Commands$decode_response, _user$project$SearchBars_Commands$loop_url, data));
 };
+var _user$project$SearchBars_Commands$update_scroll = A3(
+	_elm_lang$core$Task$perform,
+	_user$project$SearchBars_Messages$ScrollFail,
+	_user$project$SearchBars_Messages$ScrollSucc,
+	_elm_lang$dom$Dom_Scroll$toBottom('message_pane'));

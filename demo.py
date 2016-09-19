@@ -1,4 +1,4 @@
-from iris import Iris, IrisValue
+from iris import Iris, IrisValue, Int, IrisType, Any
 from collections import defaultdict
 import fileinput
 
@@ -6,30 +6,30 @@ iris = Iris()
 
 # here we simply add two integers, result will be appended to
 # result list in enviornment context
-@iris.register("add {n1:Int} and {n2:Int}")
-def add(n1, n2):
+@iris.register("add {n1} and {n2}")
+def add(n1 : Int, n2 : Int):
     return n1+n2
 
 # so here we add a new named variable to enviornment context that
 # holds the result
 @iris.register("add {n1:Int} and {n2:Int} to var")
-def add_named(n1, n2):
+def add_named(n1 : Int, n2 : Int):
     return IrisValue(n1+n2, name="n1_and_n2")
 
 # demonstrate lookup of variable from environment
-@iris.register("sum {lst:List}")
-def sum1(lst):
+@iris.register("sum {lst}")
+def sum1(lst : Any):
     return sum(lst)
 
-@iris.register("count {lst:List}")
-def count1(lst):
+@iris.register("count {lst}")
+def count1(lst : Any):
     counts = defaultdict(int)
     for x in lst:
         counts[x] += 1
     return counts
 
-@iris.register("make indicator for {lst:List}")
-def make_indicator(lst):
+@iris.register("make indicator for {lst}")
+def make_indicator(lst : Any):
     keys = set(lst)
     index2key = {i:k for i,k in enumerate(keys)}
     key2index = {k:i for i,k in index2key.items()}
@@ -47,8 +47,8 @@ def last_values():
 def env():
     return iris.env
 
-@iris.register("{x:List}")
-def info(x):
+@iris.register("{x}")
+def info(x : Any):
     return x
 
 @iris.register("list commands")

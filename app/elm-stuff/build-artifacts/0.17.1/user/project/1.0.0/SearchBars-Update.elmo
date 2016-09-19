@@ -51,7 +51,7 @@ var _user$project$SearchBars_Update$update = F2(
 									_elm_lang$core$Native_List.fromArray(
 										[update_current]))
 							}),
-						_1: _elm_lang$core$Platform_Cmd$none
+						_1: _user$project$SearchBars_Commands$update_scroll
 					};
 				} else {
 					return {
@@ -59,9 +59,13 @@ var _user$project$SearchBars_Update$update = F2(
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
 							{current: update_current}),
-						_1: _elm_lang$core$Platform_Cmd$none
+						_1: _user$project$SearchBars_Commands$update_scroll
 					};
 				}
+			case 'ScrollSucc':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			case 'ScrollFail':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			default:
 				var new_message = {origin: 'user', content: model.input, kind: 'question'};
 				var new_current = A2(_user$project$SearchBars_Update$update_current_messages, model.current, new_message);

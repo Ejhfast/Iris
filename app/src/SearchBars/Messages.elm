@@ -1,6 +1,7 @@
 module SearchBars.Messages exposing (..)
 import SearchBars.Models exposing (..)
 import Http
+import Dom
 
 type Msg
       = ChangeInput String
@@ -8,6 +9,8 @@ type Msg
       | Submit
       | LoopFail (Http.Error)
       | LoopSucc (Response)
+      | ScrollSucc ()
+      | ScrollFail (Dom.Error)
 
 -- MESSAGES
 

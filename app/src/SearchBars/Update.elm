@@ -40,14 +40,16 @@ update msg model =
        "succeed" ->
          let new_question = {id = model.current.id + 1, messages = []}
              curr_dialog = model.dialog in
-         ( {model | current = new_question, dialog = (curr_dialog ++ [update_current]) }, Cmd.none )
+         ( {model | current = new_question, dialog = (curr_dialog ++ [update_current]) }, update_scroll )
        _ ->
-         ( { model | current = update_current }, Cmd.none)
+         ( { model | current = update_current }, update_scroll)
+    ScrollSucc () -> (model, Cmd.none)
+    ScrollFail error -> (model,  Cmd.none)
     Submit ->
       let curr_dialog = model.dialog
           new_message = { origin = "user", content = model.input, kind = "question" }
           new_current = update_current_messages model.current new_message in
-      ({ model | current = new_current, input = ""}, post_loop new_current)
+      ({ model | current = new_current, input = ""}, post_loop new_current )
 
 -- -- UPDATE
 --

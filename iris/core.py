@@ -8,6 +8,15 @@ from collections import defaultdict
 import numpy as np
 
 
+class IrisType:
+    name = "Root"
+
+class Int(IrisType):
+    name = "Int"
+
+class Any(IrisType):
+    name = "Any"
+
 class IrisValue:
 
     def __init__(self, value, name=None):
@@ -55,11 +64,12 @@ class Iris:
         if all([arg_name in arg_map for arg_name in to_execute["args"]]):
             # we were given all the arguments, now do type conversion
             # need to fix the way I am dealing with types
-            args = [self.magic_type_convert(arg_map[arg_name],"Int") for arg_name in to_execute["args"]]
+            print(to_execute["types"])
+            args = [self.magic_type_convert(arg_map[arg_name],to_execute["types"][arg_name].name) for arg_name in to_execute["args"]]
             return True, to_execute["function"](*args)
         # else we don't have all the args, so try to match
         for cmd in self.class2cmd[best_class]:
-            succ, map = self.arg_match(query_string, cmd)
+            succ, map = self.arg_match(query_string, cmd, to_execute["types"])
             if succ:
                 args = [map[arg_name] for arg_name in to_execute["args"]]
                 return True, to_execute["function"](*args)
@@ -133,16 +143,15 @@ class Iris:
         return maps
 
     # attempt to match query string to command and return mappings
-    def arg_match(self, query_string, command_string):
+    def arg_match(self, query_string, command_string, types):
         maps = {}
         labels = []
         query_words, cmd_words = [shlex.split(x) for x in [query_string, command_string]]
         if len(query_words) != len(cmd_words): return False, {}
         for qw, cw in zip(query_words, cmd_words):
             if self.is_arg(cw):
-                word_, type_ = cw[1:-1].split(":")
-                if type_ == "": type_ = None
-                maps[word_] = self.magic_type_convert(qw, type_)
+                word_ = cw[1:-1]
+                maps[word_] = self.magic_type_convert(qw, types[word_])
             else:
                 if qw != cw: return False, {}
         return True, maps
@@ -183,11 +192,12 @@ class Iris:
         def inner(func):
             # sketchy hack to get function arg names CPython
             f_args = func.__code__.co_varnames[:func.__code__.co_argcount]
+            f_types = func.__annotations__
             self.mappings[command_string] = {"function":self.ctx_wrap(func), "args":f_args}
             new_index = len(self.cmd2class)
             self.cmd2class[command_string] = new_index
             self.class2cmd[new_index].append(command_string)
-            self.class_functions[new_index] = {"function":self.ctx_wrap(func), "args":f_args}
+            self.class_functions[new_index] = {"function":self.ctx_wrap(func), "args":f_args, "types":f_types}
             return self.ctx_wrap(func)
         return inner
 

@@ -1,3 +1,9 @@
+var _user$project$SearchBars_Messages$ScrollFail = function (a) {
+	return {ctor: 'ScrollFail', _0: a};
+};
+var _user$project$SearchBars_Messages$ScrollSucc = function (a) {
+	return {ctor: 'ScrollSucc', _0: a};
+};
 var _user$project$SearchBars_Messages$LoopSucc = function (a) {
 	return {ctor: 'LoopSucc', _0: a};
 };
