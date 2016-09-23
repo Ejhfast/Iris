@@ -22,7 +22,7 @@ encode_question m =
 loop_url = "http://localhost:8000/loop"
 
 decode_response : Decode.Decoder Response
-decode_response = Decode.object2 Response ("action" := Decode.string) ("content" := Decode.string)
+decode_response = Decode.object2 Response ("action" := Decode.string) ("content" := Decode.list Decode.string)
 
 post_loop question =
     let question_data = encode_question question

@@ -20,7 +20,7 @@ def add_cors(route):
 
 def parse_args(j_data):
     messages = j_data['messages']
-    fail_indexes = [i for i,x in enumerate(messages) if x["origin"] == "iris" and x["kind"] == "fail" ]
+    fail_indexes = [i for i,x in enumerate(messages) if x["origin"] == "iris" and x["kind"] == "ask" ]
     args = {}
     for i in fail_indexes:
         iris_ask = messages[i]["content"]
@@ -36,10 +36,13 @@ async def loop(request):
     top_level_q = question['messages'][0]['content']
     args = parse_args(question)
     res = iris.loop(top_level_q, args)
-    if res[0]:
-        results = {"action":"succeed", "content":"{}".format(res[1])}
+    if res[0] == "Success":
+        results = {"action":"success", "content":res[1]}
+    elif res[0] == "Ask":
+        results = {"action":"ask", "content":res[1]}
     else:
-        results = {"action":"fail", "content":"{}".format(res[1])}
+        results = {"action":"fail", "content":res[1]}
+    print(results)
     return web.json_response(results)
 
 add_cors(app.router.add_route('POST', '/loop', loop))
