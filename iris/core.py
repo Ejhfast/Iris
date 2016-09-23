@@ -10,22 +10,34 @@ import numpy as np
 
 class IrisType:
     name = "Root"
+    @classmethod
+    def convert_type(cls, value, env):
+        if value in env and cls.is_type(env[value]):
+            return True, env[value], value
+        return False, "I couldn't find \"{}\" of type {} in the current program environment".format(value, cls.name), value
 
 class Int(IrisType):
     name = "Int"
     def is_type(value):
         return isinstance(value, int)
-    def convert_type(value, env):
+    @classmethod
+    def convert_type(cls, value, env):
         if value in env and Int.is_type(env[value]):
-            return True, env[value]
+            return True, env[value], value
         else:
             try:
-                return True, int(value)
+                return True, int(value), value
             except:
-                return False, "Could not find Int type for {}".format(value)
+                return False, "I want an {} type, but couldn't find one for \"{}\"".format(cls.name, value), value
+
+class List(IrisType):
+    name = "List"
+    def is_type(value):
+        return isinstance(value,list)
 
 class Any(IrisType):
     name = "Any"
+    def is_type(value): return True
 
 class IrisValue:
 
@@ -64,7 +76,56 @@ class Iris:
                 labels.append({"text":w,"index":i,"label":0})
         return labels
 
+    def gen_example(self, cls_idx, query_string, arg_triple):
+        print("doing gen")
+        succs = [x[2] for x in arg_triple]
+        if not all(succs):
+            print("won't generate an example")
+            return False, None
+        else:
+            print("in else")
+            arg_map = {}
+            for name,val,_ in arg_triple: arg_map[val] = name
+            transform = []
+            query_words = query_string.lower().split()
+            print(arg_map)
+            for w in query_words:
+                if w in arg_map:
+                    transform.append("{"+arg_map[w]+"}")
+                else:
+                    transform.append(w)
+            command_string = " ".join(transform)
+            if command_string in self.cmd2class: return False, None
+            self.cmd2class[command_string] = cls_idx
+            self.class2cmd[cls_idx].append(command_string)
+            print(command_string)
+            self.train_model()
+            return True, command_string
+
+    # returns "Ask", "Success", or "Failure" + message
     def loop(self, query_string, arg_map):
+        # helper for aggregating over args
+        def process_succ_failure(cls_idx, s_args, arg_names):
+            succs = [x[0] for x in s_args]
+            args = [x[1] for x in s_args]
+            values = [x[2] for x in s_args]
+            triples = list(zip(arg_names,args,succs))
+            for_ex = list(zip(arg_names,values,succs))
+            if all(succs):
+                learn, lcmd = self.gen_example(cls_idx, query_string, for_ex)
+                result = to_execute["function"](*args)
+                if learn:
+                    result = "(Learned how to {})\n\n{}".format(lcmd,result)
+                return "Success", result
+            else:
+                # kind of obnoxious that I am doing string construction here...
+                assump = lambda x,y: "I think {} is \"{}\"".format(x,y)
+                problem = lambda x,y: "For {}, {}".format(x,y)
+                arg_assumptions = "\n".join([assump(x[0],x[1]) for x in triples if x[2] == True])
+                arg_problems = "\n".join([problem(x[0],x[1]) for x in triples if x[2] == False])
+                if arg_assumptions != "": arg_assumptions = "\n"+arg_assumptions
+                if arg_problems != "": arg_problems = "\n"+arg_problems
+                return "Failure", "I ran into a problem:{}{}".format(arg_assumptions, arg_problems)
         # first get best prediction
         predictions = self.predict_input(query_string)[0].tolist()
         sorted_predictions = sorted([(i,self.class2cmd[i],x) for i,x in enumerate(predictions)],key=lambda x: x[-1], reverse=True)
@@ -73,36 +134,20 @@ class Iris:
         # now check arg_map
         if all([arg_name in arg_map for arg_name in to_execute["args"]]):
             # we were given all the arguments, now do type conversion
-            print(to_execute["types"])
             s_args = [self.magic_type_convert(arg_map[arg_name], to_execute["types"][arg_name]) for arg_name in to_execute["args"]]
-            # this is redundant and needs to be refactored --
-            # also, need at least a 3 way response value (True -- complete, False -- more args, False -- kill it)
-            succs = [x[0] for x in s_args]
-            args = [x[1] for x in s_args]
-            if all(succs):
-                return True, to_execute["function"](*args)
-            else:
-                return False, "I ran into a problem:\n"+"\n".join([str(x) for x in zip(["arg{}".format(i) for i in range(1,len(args)+1)],args)])
+            return process_succ_failure(best_class, s_args, to_execute["args"])
         # else we don't have all the args, so try to match
         for cmd in self.class2cmd[best_class]:
             succ, map = self.arg_match(query_string, cmd, to_execute["types"])
             if succ:
                 s_args = [map[arg_name] for arg_name in to_execute["args"]]
-                succs = [x[0] for x in s_args]
-                args = [x[1] for x in s_args]
-                print(succs,args)
-                if all(succs):
-                    return True, to_execute["function"](*args)
-                else:
-                    return False, "I ran into a problem:\n"+"\n".join([str(x) for x in zip(["arg{}".format(i) for i in range(1,len(args)+1)],args)])
+                return process_succ_failure(best_class, s_args, to_execute["args"])
         # if all that fails we need to start asking for args
         for arg_name in to_execute["args"]:
             if not (arg_name in arg_map):
                 if len(arg_map) == 0: # implies this is the first argument asked for
-                    return False, "I think you want to \"{}\". What is the value of {}?".format(cmd,arg_name)
-                return False, "What is the value of {}?".format(arg_name)
-        # this shouldn't happen
-        return False, None
+                    return "Ask", "I think you want to \"{}\". What is the value of {}?".format(cmd,arg_name)
+                return "Ask", "What is the value of {}?".format(arg_name)
 
     def best_n(self, query, n=1):
         probs = self.model.predict_log_proba(self.vectorizer.transform([query]))[0]

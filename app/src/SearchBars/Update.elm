@@ -37,12 +37,12 @@ update msg model =
      let iris_message = { origin = "iris", content = response.content, kind = response.action }
          update_current = update_current_messages model.current iris_message in
      case response.action of
-       "succeed" ->
+      "ask" ->
+        ( { model | current = update_current }, update_scroll)
+      _ ->
          let new_question = {id = model.current.id + 1, messages = []}
              curr_dialog = model.dialog in
          ( {model | current = new_question, dialog = (curr_dialog ++ [update_current]) }, update_scroll )
-       _ ->
-         ( { model | current = update_current }, update_scroll)
     ScrollSucc () -> (model, Cmd.none)
     ScrollFail error -> (model,  Cmd.none)
     Submit ->

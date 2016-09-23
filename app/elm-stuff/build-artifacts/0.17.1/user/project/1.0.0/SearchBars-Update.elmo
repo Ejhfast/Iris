@@ -32,7 +32,15 @@ var _user$project$SearchBars_Update$update = F2(
 				var iris_message = {origin: 'iris', content: _p2.content, kind: _p2.action};
 				var update_current = A2(_user$project$SearchBars_Update$update_current_messages, model.current, iris_message);
 				var _p1 = _p2.action;
-				if (_p1 === 'succeed') {
+				if (_p1 === 'ask') {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{current: update_current}),
+						_1: _user$project$SearchBars_Commands$update_scroll
+					};
+				} else {
 					var curr_dialog = model.dialog;
 					var new_question = {
 						id: model.current.id + 1,
@@ -51,14 +59,6 @@ var _user$project$SearchBars_Update$update = F2(
 									_elm_lang$core$Native_List.fromArray(
 										[update_current]))
 							}),
-						_1: _user$project$SearchBars_Commands$update_scroll
-					};
-				} else {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{current: update_current}),
 						_1: _user$project$SearchBars_Commands$update_scroll
 					};
 				}

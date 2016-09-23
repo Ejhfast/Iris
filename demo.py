@@ -1,4 +1,4 @@
-from iris import Iris, IrisValue, Int, IrisType, Any
+from iris import Iris, IrisValue, Int, IrisType, Any, List
 from collections import defaultdict
 import fileinput
 
@@ -18,7 +18,7 @@ def add_named(n1 : Int, n2 : Int):
 
 # demonstrate lookup of variable from environment
 @iris.register("sum {lst}")
-def sum1(lst : Any):
+def sum1(lst : List):
     return sum(lst)
 
 @iris.register("count {lst}")
@@ -43,7 +43,7 @@ def what_vars():
 def last_values():
     return iris.env["results"]
 
-@iris.register("env")
+@iris.register("program enviornment")
 def env():
     return iris.env
 
