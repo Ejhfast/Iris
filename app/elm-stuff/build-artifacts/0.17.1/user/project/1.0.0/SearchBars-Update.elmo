@@ -4,11 +4,7 @@ var _user$project$SearchBars_Update$update_current_messages = F2(
 		return _elm_lang$core$Native_Utils.update(
 			q,
 			{
-				messages: A2(
-					_elm_lang$core$Basics_ops['++'],
-					curr_messages,
-					_elm_lang$core$Native_List.fromArray(
-						[m]))
+				messages: A2(_elm_lang$core$Basics_ops['++'], curr_messages, m)
 			});
 	});
 var _user$project$SearchBars_Update$update = F2(
@@ -29,8 +25,13 @@ var _user$project$SearchBars_Update$update = F2(
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			case 'LoopSucc':
 				var _p2 = _p0._0;
-				var iris_message = {origin: 'iris', content: _p2.content, kind: _p2.action};
-				var update_current = A2(_user$project$SearchBars_Update$update_current_messages, model.current, iris_message);
+				var iris_messages = A2(
+					_elm_lang$core$List$map,
+					function (x) {
+						return {origin: 'iris', content: x, kind: _p2.action};
+					},
+					_p2.content);
+				var update_current = A2(_user$project$SearchBars_Update$update_current_messages, model.current, iris_messages);
 				var _p1 = _p2.action;
 				if (_p1 === 'ask') {
 					return {
@@ -68,7 +69,11 @@ var _user$project$SearchBars_Update$update = F2(
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			default:
 				var new_message = {origin: 'user', content: model.input, kind: 'question'};
-				var new_current = A2(_user$project$SearchBars_Update$update_current_messages, model.current, new_message);
+				var new_current = A2(
+					_user$project$SearchBars_Update$update_current_messages,
+					model.current,
+					_elm_lang$core$Native_List.fromArray(
+						[new_message]));
 				var curr_dialog = model.dialog;
 				return {
 					ctor: '_Tuple2',

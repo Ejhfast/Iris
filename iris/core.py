@@ -115,17 +115,17 @@ class Iris:
                 learn, lcmd = self.gen_example(cls_idx, query_string, for_ex)
                 result = to_execute["function"](*args)
                 if learn:
-                    result = "(Learned how to {})\n\n{}".format(lcmd,result)
+                    result = ["(Learned how to {})".format(lcmd),str(result)]
+                else:
+                    result = [str(result)]
                 return "Success", result
             else:
                 # kind of obnoxious that I am doing string construction here...
                 assump = lambda x,y: "I think {} is \"{}\"".format(x,y)
                 problem = lambda x,y: "For {}, {}".format(x,y)
-                arg_assumptions = "\n".join([assump(x[0],x[1]) for x in triples if x[2] == True])
-                arg_problems = "\n".join([problem(x[0],x[1]) for x in triples if x[2] == False])
-                if arg_assumptions != "": arg_assumptions = "\n"+arg_assumptions
-                if arg_problems != "": arg_problems = "\n"+arg_problems
-                return "Failure", "I ran into a problem:{}{}".format(arg_assumptions, arg_problems)
+                arg_assumptions = [assump(x[0],x[1]) for x in triples if x[2] == True]
+                arg_problems = [problem(x[0],x[1]) for x in triples if x[2] == False]
+                return "Failure", ["I ran into a problem:"]+arg_assumptions+arg_problems
         # first get best prediction
         predictions = self.predict_input(query_string)[0].tolist()
         sorted_predictions = sorted([(i,self.class2cmd[i],x) for i,x in enumerate(predictions)],key=lambda x: x[-1], reverse=True)
@@ -146,8 +146,8 @@ class Iris:
         for arg_name in to_execute["args"]:
             if not (arg_name in arg_map):
                 if len(arg_map) == 0: # implies this is the first argument asked for
-                    return "Ask", "I think you want to \"{}\". What is the value of {}?".format(cmd,arg_name)
-                return "Ask", "What is the value of {}?".format(arg_name)
+                    return "Ask", ["I think you want to \"{}\". What is the value of {}?".format(cmd,arg_name)]
+                return "Ask", ["What is the value of {}?".format(arg_name)]
 
     def best_n(self, query, n=1):
         probs = self.model.predict_log_proba(self.vectorizer.transform([query]))[0]

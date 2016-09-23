@@ -65,7 +65,10 @@ var _user$project$SearchBars_Commands$decode_response = A3(
 	_elm_lang$core$Json_Decode$object2,
 	_user$project$SearchBars_Models$Response,
 	A2(_elm_lang$core$Json_Decode_ops[':='], 'action', _elm_lang$core$Json_Decode$string),
-	A2(_elm_lang$core$Json_Decode_ops[':='], 'content', _elm_lang$core$Json_Decode$string));
+	A2(
+		_elm_lang$core$Json_Decode_ops[':='],
+		'content',
+		_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string)));
 var _user$project$SearchBars_Commands$loop_url = 'http://localhost:8000/loop';
 var _user$project$SearchBars_Commands$encode_message = function (m) {
 	return _elm_lang$core$Json_Encode$object(

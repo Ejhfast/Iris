@@ -21,10 +21,10 @@ import Debug
 --     Nothing ->
 --       {q | question = Just s}
 
-update_current_messages : Question -> Message -> Question
+update_current_messages : Question -> List Message -> Question
 update_current_messages q m =
   let curr_messages = q.messages in
-  { q | messages = (curr_messages ++ [m])}
+  { q | messages = (curr_messages ++ m)}
 
 update : Msg -> Conversation -> (Conversation, Cmd Msg)
 update msg model =
@@ -34,8 +34,8 @@ update msg model =
     NoOp -> (model, Cmd.none)
     LoopFail error -> (model, Cmd.none)
     LoopSucc response ->
-     let iris_message = { origin = "iris", content = response.content, kind = response.action }
-         update_current = update_current_messages model.current iris_message in
+     let iris_messages = List.map (\x -> { origin = "iris", content = x, kind = response.action }) response.content
+         update_current = update_current_messages model.current iris_messages in
      case response.action of
       "ask" ->
         ( { model | current = update_current }, update_scroll)
@@ -48,7 +48,7 @@ update msg model =
     Submit ->
       let curr_dialog = model.dialog
           new_message = { origin = "user", content = model.input, kind = "question" }
-          new_current = update_current_messages model.current new_message in
+          new_current = update_current_messages model.current [new_message] in
       ({ model | current = new_current, input = ""}, post_loop new_current )
 
 -- -- UPDATE

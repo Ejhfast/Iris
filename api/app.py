@@ -37,11 +37,12 @@ async def loop(request):
     args = parse_args(question)
     res = iris.loop(top_level_q, args)
     if res[0] == "Success":
-        results = {"action":"success", "content":"{}".format(res[1])}
+        results = {"action":"success", "content":res[1]}
     elif res[0] == "Ask":
-        results = {"action":"ask", "content":"{}".format(res[1])}
+        results = {"action":"ask", "content":res[1]}
     else:
-        results = {"action":"fail", "content":"{}".format(res[1])}
+        results = {"action":"fail", "content":res[1]}
+    print(results)
     return web.json_response(results)
 
 add_cors(app.router.add_route('POST', '/loop', loop))
