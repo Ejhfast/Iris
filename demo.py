@@ -1,7 +1,8 @@
-from iris import Iris, IrisValue, Int, IrisType, Any, List
+from iris import Iris, IrisValue, Int, IrisType, Any, List, String
 from collections import defaultdict
+from sklearn.linear_model import LogisticRegression
 import fileinput
-
+import numpy as np
 iris = Iris()
 
 # here we simply add two integers, result will be appended to
@@ -9,6 +10,32 @@ iris = Iris()
 @iris.register("add {n1} and {n2}")
 def add(n1 : Int, n2 : Int):
     return n1+n2
+
+@iris.register("cross-validate using {score} and {n} folds")
+def cross_validate(score : String, n : Int):
+    model = iris.env["data_model"]
+    x = iris.env["features"]
+    y = iris.env["classes"]
+    from sklearn.cross_validation import cross_val_score
+    return cross_val_score(model, x, y, scoring = score, cv=n)
+
+
+@iris.register("find the best regularization parameter")
+def find_regularize():
+    model = iris.env["data_model"]
+    x = iris.env["features"]
+    y = iris.env["classes"]
+    from sklearn.cross_validation import cross_val_score
+    import numpy as np
+    best_score = 0
+    best_c = None
+    for c in [0.01, 0.1, 1, 10, 100]:
+        model = LogisticRegression(C=c)
+        score = np.average(cross_val_score(model, x, y, scoring = "accuracy", cv=5))
+        if score > best_score:
+            best_score = score
+            best_c = c
+    return "best l2 is {} with cross-validation performance of {} accuracy".format(best_c, best_score)
 
 # so here we add a new named variable to enviornment context that
 # holds the result
@@ -58,6 +85,13 @@ def list_cmds():
 
 iris.env["my_list"] = [1,2,3,4,5]
 iris.env["my_num"] = 3
+model = LogisticRegression()
+x_data = np.random.randint(0,10,size=(100,10))
+y_data = (np.sum(x_data,axis=1) > 40).astype(int)
+iris.env["data_model"] = model
+iris.env["features"] = x_data
+iris.env["classes"] = y_data
+
 
 # data_cols = defaultdict(list)
 # lookup = {}

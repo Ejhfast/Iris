@@ -30,6 +30,20 @@ class Int(IrisType):
             except:
                 return False, "I want an {} type, but couldn't find one for \"{}\"".format(cls.name, value), value
 
+class String(IrisType):
+    name = "String"
+    def is_type(value):
+        return isinstance(value, str)
+    @classmethod
+    def convert_type(cls, value, env):
+        if value in env and Int.is_type(env[value]):
+            return True, env[value], value
+        else:
+            try:
+                return True, str(value), value
+            except:
+                return False, "I want an {} type, but couldn't find one for \"{}\"".format(cls.name, value), value
+
 class List(IrisType):
     name = "List"
     def is_type(value):
