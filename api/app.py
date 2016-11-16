@@ -1,4 +1,6 @@
 from aiohttp import web
+import jinja2
+import aiohttp_jinja2
 import json
 import os
 import sys
@@ -9,6 +11,7 @@ from demo import iris
 PORT = int(os.environ.get("PORT", 8000))
 
 app = web.Application()
+aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader('templates/'))
 
 cors = aiohttp_cors.setup(app)
 
@@ -28,6 +31,22 @@ def parse_args(j_data):
         print(var)
         args[var] = messages[i+1]["content"]
     return args
+
+@aiohttp_jinja2.template('upload.jinja2')
+async def data_page(request):
+    return {}
+
+add_cors(app.router.add_route('GET', '/data_page', data_page))
+
+@aiohttp_jinja2.template('data.jinja2')
+async def process_csv(request):
+    data = await request.post()
+    csv = data['csv']
+    filename = csv.filename
+    content = csv.file.read().decode('utf-8')
+    return { "lines": content.split("\n") }
+
+add_cors(app.router.add_route('POST', '/upload', process_csv))
 
 async def loop(request):
     data = await request.post()
