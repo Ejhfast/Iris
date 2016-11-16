@@ -115,7 +115,7 @@ class Iris:
                 learn, lcmd = self.gen_example(cls_idx, query_string, for_ex)
                 result = to_execute["function"](*args)
                 if learn:
-                    result = ["(Learned how to {})".format(lcmd),str(result)]
+                    result = ["(I learned how to \"{}\")".format(lcmd),str(result)]
                 else:
                     result = [str(result)]
                 return "Success", result
