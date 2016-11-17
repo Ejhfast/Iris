@@ -72,24 +72,24 @@ page model =
   ]
 
 -- slightly older
-
-qr_view {question, response} =
-  let qm = maybe_content iris_message question
-      im = maybe_content user_message response in
-  qm ++ im
-
-maybe_content : (String -> Html Msg) -> Maybe String -> List (Html Msg)
-maybe_content f c =
- case c of
-   Just s -> [f s]
-   Nothing -> []
-
-user_question_view : UserQuestion -> List (Html Msg)
-user_question_view {question, response, clarifications} =
-  let q_init = maybe_content user_message question
-      c_middle = List.concatMap qr_view clarifications
-      r_final = maybe_content iris_message response in
-  q_init ++ c_middle ++ r_final
+-- 
+-- qr_view {question, response} =
+--   let qm = maybe_content iris_message question
+--       im = maybe_content user_message response in
+--   qm ++ im
+--
+-- maybe_content : (String -> Html Msg) -> Maybe String -> List (Html Msg)
+-- maybe_content f c =
+--  case c of
+--    Just s -> [f s]
+--    Nothing -> []
+--
+-- user_question_view : UserQuestion -> List (Html Msg)
+-- user_question_view {question, response, clarifications} =
+--   let q_init = maybe_content user_message question
+--       c_middle = List.concatMap qr_view clarifications
+--       r_final = maybe_content iris_message response in
+--   q_init ++ c_middle ++ r_final
 
 
 

@@ -1,16 +1,3 @@
-var _user$project$SearchBars_View$maybe_content = F2(
-	function (f, c) {
-		var _p0 = c;
-		if (_p0.ctor === 'Just') {
-			return _elm_lang$core$Native_List.fromArray(
-				[
-					f(_p0._0)
-				]);
-		} else {
-			return _elm_lang$core$Native_List.fromArray(
-				[]);
-		}
-	});
 var _user$project$SearchBars_View$right_pane = A2(
 	_elm_lang$html$Html$div,
 	_elm_lang$core$Native_List.fromArray(
@@ -82,25 +69,9 @@ var _user$project$SearchBars_View$iris_message = function (s) {
 					]))
 			]));
 };
-var _user$project$SearchBars_View$qr_view = function (_p1) {
-	var _p2 = _p1;
-	var im = A2(_user$project$SearchBars_View$maybe_content, _user$project$SearchBars_View$user_message, _p2.response);
-	var qm = A2(_user$project$SearchBars_View$maybe_content, _user$project$SearchBars_View$iris_message, _p2.question);
-	return A2(_elm_lang$core$Basics_ops['++'], qm, im);
-};
-var _user$project$SearchBars_View$user_question_view = function (_p3) {
-	var _p4 = _p3;
-	var r_final = A2(_user$project$SearchBars_View$maybe_content, _user$project$SearchBars_View$iris_message, _p4.response);
-	var c_middle = A2(_elm_lang$core$List$concatMap, _user$project$SearchBars_View$qr_view, _p4.clarifications);
-	var q_init = A2(_user$project$SearchBars_View$maybe_content, _user$project$SearchBars_View$user_message, _p4.question);
-	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		q_init,
-		A2(_elm_lang$core$Basics_ops['++'], c_middle, r_final));
-};
 var _user$project$SearchBars_View$render_message = function (m) {
-	var _p5 = m.origin;
-	if (_p5 === 'iris') {
+	var _p0 = m.origin;
+	if (_p0 === 'iris') {
 		return _user$project$SearchBars_View$iris_message(m.content);
 	} else {
 		return _user$project$SearchBars_View$user_message(m.content);

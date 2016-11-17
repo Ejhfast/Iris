@@ -32,19 +32,19 @@ post_loop question =
 
 -- encoders
 
-encode_clarification : Clarification -> JS.Value
-encode_clarification {question, response} =
-  JS.object [("question", encode_maybe_string question), ("response", encode_maybe_string response)]
-
-encode_clarifications : List Clarification -> JS.Value
-encode_clarifications c_lst =
-  JS.list (List.map encode_clarification c_lst)
-
-encode_maybe_string : Maybe String -> JS.Value
-encode_maybe_string ms =
-  case ms of
-    Just s -> JS.string s
-    Nothing -> JS.null
+-- encode_clarification : Clarification -> JS.Value
+-- encode_clarification {question, response} =
+--   JS.object [("question", encode_maybe_string question), ("response", encode_maybe_string response)]
+--
+-- encode_clarifications : List Clarification -> JS.Value
+-- encode_clarifications c_lst =
+--   JS.list (List.map encode_clarification c_lst)
+--
+-- encode_maybe_string : Maybe String -> JS.Value
+-- encode_maybe_string ms =
+--   case ms of
+--     Just s -> JS.string s
+--     Nothing -> JS.null
 
 -- encode_question : UserQuestion -> JS.Value
 -- encode_question {question, response, clarifications} =
@@ -54,25 +54,25 @@ encode_maybe_string ms =
 
 --decoders
 
-nullOr : Decode.Decoder a -> Decode.Decoder (Maybe a)
-nullOr decoder =
-    Decode.oneOf
-      [ Decode.null Nothing
-      , Decode.map Just decoder
-      ]
+-- nullOr : Decode.Decoder a -> Decode.Decoder (Maybe a)
+-- nullOr decoder =
+--     Decode.oneOf
+--       [ Decode.null Nothing
+--       , Decode.map Just decoder
+--       ]
 
-clarification_decoder : Decode.Decoder Clarification
-clarification_decoder =
-  Decode.object2 Clarification
-    ("question" := nullOr Decode.string)
-    ("response" := nullOr Decode.string)
+-- clarification_decoder : Decode.Decoder Clarification
+-- clarification_decoder =
+--   Decode.object2 Clarification
+--     ("question" := nullOr Decode.string)
+--     ("response" := nullOr Decode.string)
 
-question_decoder : Decode.Decoder UserQuestion
-question_decoder =
-  Decode.object3 UserQuestion
-    ("question" := nullOr Decode.string)
-    ("response" := nullOr Decode.string)
-    ("clarifications" := Decode.list clarification_decoder)
+-- question_decoder : Decode.Decoder UserQuestion
+-- question_decoder =
+--   Decode.object3 UserQuestion
+--     ("question" := nullOr Decode.string)
+--     ("response" := nullOr Decode.string)
+--     ("clarifications" := Decode.list clarification_decoder)
 
 -- -- old commands
 --

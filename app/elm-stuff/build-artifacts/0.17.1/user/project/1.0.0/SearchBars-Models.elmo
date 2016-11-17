@@ -1,21 +1,10 @@
-var _user$project$SearchBars_Models$emptyUQ = {
-	question: _elm_lang$core$Maybe$Nothing,
-	response: _elm_lang$core$Maybe$Nothing,
-	clarifications: _elm_lang$core$Native_List.fromArray(
-		[])
+var _user$project$SearchBars_Models$initq = {
+	id: 0,
+	messages: _elm_lang$core$Native_List.fromArray(
+		[
+			{origin: 'iris', content: 'What would you like to do today?', kind: 'init'}
+		])
 };
-var _user$project$SearchBars_Models$Clarification = F2(
-	function (a, b) {
-		return {question: a, response: b};
-	});
-var _user$project$SearchBars_Models$UserQuestion = F3(
-	function (a, b, c) {
-		return {question: a, response: b, clarifications: c};
-	});
-var _user$project$SearchBars_Models$Dialog = F3(
-	function (a, b, c) {
-		return {dialog: a, current: b, input: c};
-	});
 var _user$project$SearchBars_Models$Message = F3(
 	function (a, b, c) {
 		return {origin: a, content: b, kind: c};

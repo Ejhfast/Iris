@@ -1,7 +1,7 @@
 var _user$project$Models$initialModel = {
 	dialog: {
 		dialog: _elm_lang$core$Native_List.fromArray(
-			[]),
+			[_user$project$SearchBars_Models$initq]),
 		current: {
 			id: 0,
 			messages: _elm_lang$core$Native_List.fromArray(

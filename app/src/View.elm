@@ -6,7 +6,7 @@ import Html.Attributes exposing (..)
 import Html.App
 import Messages exposing (Msg(..))
 import Models exposing (Model)
-import SearchBars.Models exposing (Dialog)
+-- import SearchBars.Models exposing (Dialog)
 
 
 import SearchBars.View

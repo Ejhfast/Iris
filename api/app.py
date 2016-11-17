@@ -7,6 +7,9 @@ import sys
 import aiohttp_cors
 sys.path.insert(0, os.path.abspath('..'))
 from demo import iris
+import util
+from collections import defaultdict
+from sklearn.linear_model import LogisticRegression
 
 PORT = int(os.environ.get("PORT", 8000))
 
@@ -14,6 +17,8 @@ app = web.Application()
 aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader('templates/'))
 
 cors = aiohttp_cors.setup(app)
+
+content = None
 
 def add_cors(route):
     cors.add(route, {"*": aiohttp_cors.ResourceOptions(
@@ -40,13 +45,31 @@ add_cors(app.router.add_route('GET', '/data_page', data_page))
 
 @aiohttp_jinja2.template('data.jinja2')
 async def process_csv(request):
+    global content
     data = await request.post()
     csv = data['csv']
     filename = csv.filename
-    content = csv.file.read().decode('utf-8')
-    return { "lines": content.split("\n") }
+    content = csv.file.read().decode('utf-8').split('\n')
+    return { "lines": util.rows_and_types(content) }
 
 add_cors(app.router.add_route('POST', '/upload', process_csv))
+
+@aiohttp_jinja2.template('upload.jinja2')
+async def import_data(request):
+    data = await request.post()
+    column_data = defaultdict(dict)
+    for k,v in data.items():
+        key = "_".join(k.split("_")[:-1])
+        index = int(k.split("_")[-1])
+        column_data[index][key] = v
+    env = util.process_data(column_data, content)
+    X,y,f = util.make_xy(column_data, env)
+    iris.env["data_model"] = LogisticRegression()
+    iris.env["features"] = X
+    iris.env["classes"] = y
+    return web.Response(status=302, headers={"Location":"http://localhost:3000/"})
+
+add_cors(app.router.add_route('POST', '/import_data', import_data))
 
 async def loop(request):
     data = await request.post()
